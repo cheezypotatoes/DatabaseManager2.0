@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("SqlDialectInspection")
 public class InsertData{
 
     public String dataLocation;
@@ -64,18 +64,17 @@ public class InsertData{
      * Inserts a new book into the database.
      *
      * @param title The title of the new book.
-     * @param imageLink The image link of the new book.
-     * @param genre An array of genres associated with the new book.
+     * @param imageName The image link of the new book.
+     * @param genres An array of genres associated with the new book.
      * @param authorId The ID of the author of the new book.
      * @param availability A boolean indicating whether the new book is available or not.
      * @param bookPrice The price of the new book.
      * @param bookSold The number of copies sold of the new book.
      * @param description The description of the new book.
-     *
      * This method inserts a new book with the provided information into the "book_details" table of the database.
      * It also handles insertion of genres and description associated with the book.
      */
-    public void InsertNewBook(String title, String imageLink, String[] genre, int authorId, boolean availability, double bookPrice, int bookSold, String description){
+    public void InsertNewBook(String title, String imageName, String[] genres, int authorId, boolean availability, double bookPrice, int bookSold, String description){
         Logger logger = Logger.getLogger("InsertDataLogger");
         try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
             // SQL statement to insert data into the "book_details" table
@@ -84,7 +83,7 @@ public class InsertData{
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertBookDetailsSQL)) {
                 // Set values for the parameters in the prepared statement
                 preparedStatement.setString(1, title);
-                preparedStatement.setString(2, imageLink);
+                preparedStatement.setString(2, imageName);
                 preparedStatement.setInt(3, authorId);
                 preparedStatement.setBoolean(4, availability);
                 preparedStatement.setDouble(5, bookPrice);
@@ -97,6 +96,11 @@ public class InsertData{
 
                 // Insert the description to the book_description table
                 InsertNewDescription(title, description);
+
+                // Insert all genre of the specific book to a different table (1NF)
+                for (String genre : genres){
+                    InsertGenre(title, genre);
+                }
 
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Error inserting data into book_details table", e);
@@ -112,12 +116,11 @@ public class InsertData{
      *
      * @param book_title The title of the book.
      * @param description The description of the book.
-     *
      * This method checks if a description already exists for the given book title. If not, it inserts the description
      * into the "book_description" table of the database.
      */
     public void InsertNewDescription(String book_title, String description){
-
+        Logger logger = Logger.getLogger("InsertDataLogger");
         if (!(this.check.checkIfDescriptionExists(book_title))){
             try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
                 // SQL statement to insert data into the "book_description" table
@@ -133,17 +136,47 @@ public class InsertData{
                     System.out.println("Data inserted into book_description table successfully");
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "Error inserting data into book_description table", e);
                 }
 
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "Error inserting data into book_description table", e);
             }
         }
         else{
             // TODO OPTION TO UPDATE INSTEAD
             System.out.println("DATA ALREADY EXIST");
         }
+    }
+
+    /**
+     * Inserts a new genre for a book into the database.
+     *
+     * @param title The title of the book.
+     * @param genre The genre of the book.
+     * This method inserts a new genre associated with a book into the "book_genre" table of the database.
+     * It logs any SQL exceptions using a logger named "InsertDataLogger".
+     */
+    public void InsertGenre(String title, String genre){
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            // SQL statement to insert data into the "user_data" table
+            String insertUserDataSQL = "INSERT INTO book_genre (title, genre) VALUES (?, ?);";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(insertUserDataSQL)) {
+                preparedStatement.setString(1, title);
+                preparedStatement.setString(2, genre);
+
+                // Execute the SQL statement to insert data
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data inserted into user_data table successfully");
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error inserting data into user_data table", e);
+        }
+
     }
 
     // Buy new Book

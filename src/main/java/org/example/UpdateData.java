@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@SuppressWarnings("ALL")
+@SuppressWarnings("SqlDialectInspection")
 public class UpdateData {
 
     public String dataLocation;

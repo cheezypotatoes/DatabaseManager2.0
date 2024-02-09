@@ -5,11 +5,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DatabaseManager class serves as the parent class for managing database connections and operations.
  */
-@SuppressWarnings("ALL")
+@SuppressWarnings("SqlDialectInspection")
 public class DatabaseManager {
 
     /**
@@ -19,28 +21,27 @@ public class DatabaseManager {
     public InsertData Insert;
     public CheckData Check;
     public UpdateData Update;
+    public ReturnData Return;
 
 
     /**
-     * Constructs a DatabaseManager object with the specified data location.
+     * Constructs a DatabaseManager object to manage the specified database.
      *
-     * @param dataLocation The location where the data is stored.
-     *
-     * This constructor initializes the DatabaseManager with the provided data location and
-     * creates an instance of InsertData to handle data insertion into the database.
+     * @param dataLocation The location where the database is stored.
+     * This constructor initializes the DatabaseManager with the provided data location and creates instances
+     * of CheckData, InsertData, UpdateData, and ReturnData to handle different database operations.
      */
     public DatabaseManager(String dataLocation) {
         this.dataLocation = dataLocation;
         this.Check = new CheckData(this.dataLocation);
         this.Insert = new InsertData(this.dataLocation, this.Check);
         this.Update = new UpdateData(this.dataLocation);
-
+        this.Return = new ReturnData(this.dataLocation);
     }
 
     /**
      * Creates all required tables for the database.
      * Ensures normalization such as 1NF, 2NF, and referential integrity.
-     *
      * This method creates the following tables:
      * - "users" table: Contains user information such as email, username, password, admin status, and balance.
      * - "book_bought" table: Maps users to the books they have bought.
@@ -50,10 +51,10 @@ public class DatabaseManager {
      * - "author" table: Stores information about authors including user ID and description.
      * - "book_reviews" table: Stores reviews for books including book ID, user ID, rating, review text, and ownership status.
      * - "book_owned" table: Maps users to books they own.
-     *
      * Foreign key constraints are used to maintain referential integrity between tables.
      */
     public void createTablesIfNotExist() {
+        Logger logger = Logger.getLogger("InsertDataLogger");
         try (Connection connection = DriverManager.getConnection(this.dataLocation);
              Statement statement = connection.createStatement()) {
 
@@ -74,9 +75,8 @@ public class DatabaseManager {
                     + ");";
 
             String createBookGenreTableSQL = "CREATE TABLE IF NOT EXISTS book_genre ("
-                    + "book_id INTEGER,"
-                    + "genre TEXT,"
-                    + "FOREIGN KEY (book_id) REFERENCES book_details (id)"
+                    + "title TEXT,"
+                    + "genre TEXT"
                     + ");";
 
             String createBookDetailsTableSQL = "CREATE TABLE IF NOT EXISTS book_details ("
@@ -136,7 +136,7 @@ public class DatabaseManager {
             System.out.println("Tables created successfully");
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error create tables", e);
         }
     }
 

@@ -1,9 +1,10 @@
 package org.example;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@SuppressWarnings("ALL")
-
+@SuppressWarnings("SqlDialectInspection")
 public class CheckData {
 
     public String dataLocation;
@@ -41,7 +42,50 @@ public class CheckData {
         return exists;
     }
 
+    /**
+     * Checks if a username already exists in the database.
+     *
+     * @param username The username to check for existence.
+     * @return true if the username already exists, false otherwise.
+     * This method executes a SQL query to count the number of occurrences of the given username in the "users" table.
+     * It returns true if the count is greater than 0, indicating that the username already exists in the database,
+     * otherwise, it returns false.
+     */
+    public boolean CheckIfUserNameAlreadyExist(String username) {
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        String query = "SELECT COUNT(*) FROM users WHERE username = ?";
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
 
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Username checker error", e);
+        }
+        return false;
+    }
 
+    public boolean CheckIfEmailAlreadyExist(String email) {
+        String query = "SELECT COUNT(*) FROM users WHERE email = ?";
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, email);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
