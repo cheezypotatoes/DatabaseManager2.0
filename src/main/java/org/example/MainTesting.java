@@ -28,6 +28,14 @@ public class MainTesting {
 
         //System.out.println(db.Return.ReturnLatestId());
 
+        //String[] top_3 = db.Return.ReturnTopThreeBookTitle();
+        //for (String e : top_3){
+            //System.out.println(e);
+        //}
+
+        //System.out.println(db.Return.returnBookIdByTitle("The Secret Garden"));
+        //System.out.println(db.Return.returnBookIdByTitle("The Hitchhiker's Guide to the Galaxy"));
+
 
 
     }

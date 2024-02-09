@@ -70,7 +70,18 @@ public class CheckData {
         return false;
     }
 
+    /**
+     * Checks if an email already exists in the database.
+     *
+     * @param email The email to check for existence.
+     * @return true if the email already exists, false otherwise.
+     * This method executes a SQL query to count the number of occurrences of the given email in the "users" table.
+     * It returns true if the count is greater than 0, indicating that the email already exists in the database,
+     * otherwise, it returns false.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
     public boolean CheckIfEmailAlreadyExist(String email) {
+        Logger logger = Logger.getLogger("InsertDataLogger");
         String query = "SELECT COUNT(*) FROM users WHERE email = ?";
         try (Connection connection = DriverManager.getConnection(this.dataLocation);
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -83,7 +94,7 @@ public class CheckData {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Email Checker error", e);
         }
         return false;
     }
