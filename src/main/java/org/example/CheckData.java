@@ -9,7 +9,7 @@ public class CheckData {
     public String dataLocation;
 
     /**
-     * Constructs a InsertData object with the specified data location.
+     * Constructs a CheckData object with the specified data location.
      *
      * @param dataLocation The location where the data is stored.
      */

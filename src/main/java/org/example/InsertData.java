@@ -25,7 +25,6 @@ public class InsertData{
 
     }
 
-
     /**
      * Inserts a new user into the database.
      *
@@ -96,8 +95,8 @@ public class InsertData{
 
                 System.out.println("Data inserted into book_details table successfully");
 
-                // TODO INSERT GENRE AND DESCRIPTION
-                //InsertNewDescription(description);
+                // Insert the description to the book_description table
+                InsertNewDescription(title, description);
 
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Error inserting data into book_details table", e);
@@ -147,6 +146,15 @@ public class InsertData{
         }
     }
 
+    // Buy new Book
+    public boolean BuyBook(double cost, int user_id, int book_id){
+
+        return false;
+        // TODO ReturnUserDetailsById
+        // TODO AddNewBoughtBook
+        // TODO IncreaseBookSoldByOne
+
+    }
 
 
 }

@@ -17,8 +17,7 @@ public class MainTesting {
 
         //System.out.println(db.Check.checkIfDescriptionExists("The Great Gatsby"));
 
-
-
+        //db.Update.UpdateUserCash(1, 1350);
 
 
 

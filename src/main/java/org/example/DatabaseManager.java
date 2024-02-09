@@ -18,6 +18,7 @@ public class DatabaseManager {
     public String dataLocation;
     public InsertData Insert;
     public CheckData Check;
+    public UpdateData Update;
 
 
     /**
@@ -32,9 +33,9 @@ public class DatabaseManager {
         this.dataLocation = dataLocation;
         this.Check = new CheckData(this.dataLocation);
         this.Insert = new InsertData(this.dataLocation, this.Check);
+        this.Update = new UpdateData(this.dataLocation);
 
     }
-
 
     /**
      * Creates all required tables for the database.
