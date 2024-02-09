@@ -107,17 +107,41 @@ public class ReturnData {
         return -1;
     }
 
+    /**
+     * Returns the description of a book based on its title.
+     *
+     * @param title The title of the book.
+     * @return The description of the book, or null if the book is not found or an error occurs.
+     * This method executes a SQL query to retrieve the description of the book with the given title
+     * from the "book_description" table. It returns the description of the book if found, otherwise, it returns null.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
+    public String returnBookDescriptionByTitle(String title){
+        Logger logger = Logger.getLogger("InsertDataLogger");
 
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT description FROM book_description WHERE book_title = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, title);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getString("description");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning Latest Id", e);
+        }
+
+        return null;
+    }
 
     //TODO RETURN ALL BOOKS
     //TODO RETURN ALL USERS
-
-
-
-
-
-
-
+    //TODO RETURN ALL GENRE OF SPECIFIC BOOK
+    //TODO RETURN ALL BOOK BOUGHT BY USER
+    //TODO RETURN USER SPECIFIC DETAILS
+    //TODO RETURN USER ID BY USERNAME
 
 
 }
