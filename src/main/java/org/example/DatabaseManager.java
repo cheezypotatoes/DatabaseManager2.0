@@ -17,6 +17,8 @@ public class DatabaseManager {
      */
     public String dataLocation;
     public InsertData Insert;
+    public CheckData Check;
+
 
     /**
      * Constructs a DatabaseManager object with the specified data location.
@@ -28,7 +30,9 @@ public class DatabaseManager {
      */
     public DatabaseManager(String dataLocation) {
         this.dataLocation = dataLocation;
-        this.Insert = new InsertData(this.dataLocation);
+        this.Check = new CheckData(this.dataLocation);
+        this.Insert = new InsertData(this.dataLocation, this.Check);
+
     }
 
 
@@ -87,9 +91,9 @@ public class DatabaseManager {
 
             String createBookDescriptionTableSQL = "CREATE TABLE IF NOT EXISTS book_description ("
                     + "description_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + "book_id INTEGER,"
+                    + "book_title TEXT,"
                     + "description TEXT,"
-                    + "FOREIGN KEY (book_id) REFERENCES book_details (id)"
+                    + "FOREIGN KEY (book_title) REFERENCES book_details (title)"
                     + ");";
 
             String createAuthorTableSQL = "CREATE TABLE IF NOT EXISTS author ("
