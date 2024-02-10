@@ -1,6 +1,8 @@
 package org.example;
 
 
+import java.util.List;
+
 public class MainTesting {
 
     public static void main(String[] args) {
@@ -9,7 +11,7 @@ public class MainTesting {
         DatabaseManager db = new DatabaseManager("jdbc:sqlite:test.db");
         db.createTablesIfNotExist();
 
-        //db.Insert.InsertNewUser("example@example.com", "example_user", "password123", false, 100.0);
+        //db.Insert.InsertNewUser("example2@example.com", "example_user", "password123", false, 100.0);
 
         //db.Insert.InsertNewDescription("The Great Gatsby", "Pretty Much Good");
 
@@ -37,6 +39,40 @@ public class MainTesting {
         //System.out.println(db.Return.returnBookIdByTitle("The Hitchhiker's Guide to the Galaxy"));
 
         //System.out.println(db.Return.returnBookDescriptionByTitle("The Secret Garden"));
+
+
+        //String[] all_genre = db.Return.returnBookGenreByTitle("The Secret Garden");
+        //for (String g : all_genre){
+            //System.out.println(g);
+        //}
+
+
+        //String[][] all_users = db.Return.returnAllUsers();
+
+        //for (int i = 0; i < all_users.length; i++) {
+            // Access the user data in the current row
+            //String[] userData = all_users[i];
+
+            // Iterate over each column (user attribute)
+            //for (int j = 0; j < userData.length; j++) {
+                // Access the user attribute at index j
+                //String attribute = userData[j];
+
+                // Process the user attribute as needed
+               // System.out.println("User " + i + ", Attribute " + j + ": " + attribute);
+            //}
+        //}
+
+        //String[][] allBooks = db.Return.returnAllBooks();
+
+        // Print the book data
+        //for (String[] book : allBooks) {
+            //for (String attribute : book) {
+                //System.out.print(attribute + " ");
+            //}
+            //System.out.println(); // Move to the next line for the next book
+        //}
+
 
 
 

@@ -1,8 +1,11 @@
 package org.example;
 
 import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
 
 @SuppressWarnings("SqlDialectInspection")
 public class ReturnData {
@@ -136,9 +139,129 @@ public class ReturnData {
         return null;
     }
 
+    /**
+     * Returns the genres of a book based on its title.
+     *
+     * @param title The title of the book.
+     * @return An array containing the genres of the book, or an empty array if the book is not found or an error occurs.
+     * This method executes a SQL query to retrieve the genres of the book with the given title
+     * from the "book_genre" table. It returns an array containing the genres of the book if found,
+     * otherwise, it returns an empty array.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
+    public String[] returnBookGenreByTitle(String title){
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        List<String> genres = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT genre FROM book_genre WHERE title = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, title);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        genres.add(resultSet.getString("genre"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning Book Genre By Title", e);
+        }
+        return genres.toArray(new String[0]); // Converts arraylist to array
+    }
+
+    /**
+     * Returns all user data from the database.
+     *
+     * @return A 2D array containing all user data, or an empty array if no users are found or an error occurs.
+     * This method executes a SQL query to retrieve all user data from the "users" table.
+     * It returns a 2D array containing all user data if users are found, otherwise, it returns an empty array.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
+    public String[][] returnAllUsers() {
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        List<String[]> userDataList = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT * FROM users";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        // Create an array to hold user data
+                        String[] userData = new String[6]; // Assuming 6 columns in the "users" table
+                        // Populate the array with user data from the result set
+                        userData[0] = Integer.toString(resultSet.getInt("id"));
+                        userData[1] = resultSet.getString("email");
+                        userData[2] = resultSet.getString("username");
+                        userData[3] = resultSet.getString("password");
+                        userData[4] = resultSet.getBoolean("is_admin") ? "true" : "false";
+                        userData[5] = Double.toString(resultSet.getDouble("balance"));
+                        // Add the array to the list
+                        userDataList.add(userData);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning Users", e);
+        }
+
+        // Convert the list to a 2D array
+        String[][] userDataArray = new String[userDataList.size()][];
+        userDataList.toArray(userDataArray);
+
+        return userDataArray;
+    }
+
+
+
+    public String[][] returnAllBooks() {
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        List<String[]> bookData = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT * FROM book_details";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        // Create an array to hold book data
+                        String[] bookRow = new String[8]; // Assuming 7 columns in the "book_details" table
+                        // Populate the array with book data from the result set
+                        bookRow[0] = Integer.toString(resultSet.getInt("id"));
+                        bookRow[1] = resultSet.getString("title");
+                        bookRow[2] = resultSet.getString("image_link");
+                        bookRow[3] = Integer.toString(resultSet.getInt("author_id"));
+                        bookRow[4] = resultSet.getBoolean("is_available") ? "true" : "false";
+                        bookRow[5] = Double.toString(resultSet.getDouble("price"));
+                        bookRow[6] = Integer.toString(resultSet.getInt("copies_sold"));
+                        String[] genres = returnBookGenreByTitle(bookRow[1]);
+                        if (genres != null && genres.length > 0) {
+                            // Join genres into a single string
+                            StringBuilder genreStringBuilder = new StringBuilder();
+                            for (String genre : genres) {
+                                genreStringBuilder.append(genre).append(", ");
+                            }
+                            // Remove the last comma and space
+                            String genreString = genreStringBuilder.substring(0, genreStringBuilder.length() - 2);
+                            bookRow[7] = genreString;
+                        } else {
+                            bookRow[7] = ""; // No genres found
+                        }
+                        // Add the array to the list
+                        bookData.add(bookRow);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning Books", e);
+        }
+
+        // Convert the list to a 2D array
+        String[][] bookDataArray = new String[bookData.size()][];
+        bookData.toArray(bookDataArray);
+
+        return bookDataArray;
+    }
+
     //TODO RETURN ALL BOOKS
-    //TODO RETURN ALL USERS
-    //TODO RETURN ALL GENRE OF SPECIFIC BOOK
     //TODO RETURN ALL BOOK BOUGHT BY USER
     //TODO RETURN USER SPECIFIC DETAILS
     //TODO RETURN USER ID BY USERNAME
