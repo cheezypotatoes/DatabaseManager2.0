@@ -144,7 +144,6 @@ public class InsertData{
             }
         }
         else{
-            // TODO OPTION TO UPDATE INSTEAD
             System.out.println("DATA ALREADY EXIST");
         }
     }

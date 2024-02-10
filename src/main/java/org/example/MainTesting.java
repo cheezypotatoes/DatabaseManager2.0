@@ -73,8 +73,6 @@ public class MainTesting {
             //System.out.println(); // Move to the next line for the next book
         //}
 
-
-
-
+        //System.out.println(db.Return.userUserIdByUsername("jorge"));
     }
 }

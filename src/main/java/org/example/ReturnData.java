@@ -211,8 +211,14 @@ public class ReturnData {
         return userDataArray;
     }
 
-
-
+    /**
+     * Returns all book data from the database.
+     *
+     * @return A 2D array containing all book data, or an empty array if no books are found or an error occurs.
+     * This method executes a SQL query to retrieve all book data from the "book_details" table.
+     * It returns a 2D array containing all book data if books are found, otherwise, it returns an empty array.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
     public String[][] returnAllBooks() {
         Logger logger = Logger.getLogger("InsertDataLogger");
         List<String[]> bookData = new ArrayList<>();
@@ -261,10 +267,41 @@ public class ReturnData {
         return bookDataArray;
     }
 
-    //TODO RETURN ALL BOOKS
-    //TODO RETURN ALL BOOK BOUGHT BY USER
-    //TODO RETURN USER SPECIFIC DETAILS
-    //TODO RETURN USER ID BY USERNAME
+
+    /**
+     * Returns the user ID based on the username.
+     *
+     * @param username The username of the user.
+     * @return The user ID corresponding to the username, or null if the username is not found or an error occurs.
+     * This method executes a SQL query to retrieve the user ID from the "users" table based on the provided username.
+     * It returns the user ID if the username is found, otherwise, it returns null.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
+    public String userUserIdByUsername(String username){
+        Logger logger = Logger.getLogger("InsertDataLogger");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT id FROM users WHERE username = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, username);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return String.valueOf(resultSet.getInt("id"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning id", e);
+        }
+
+        return null;
+    }
+
+
+
+
+    //TODO RETURN ALL BOOK BOUGHT BY USER, MAKE BUY BOOK FIRST
+    //TODO RETURN USER SPECIFIC DETAILS, MAKE BUY BOOK FIRST TO RETURN BOOK BOUGHT
 
 
 }
