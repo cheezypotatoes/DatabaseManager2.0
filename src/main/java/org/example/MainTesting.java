@@ -3,6 +3,7 @@ package org.example;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class MainTesting {
 
     public static void main(String[] args) {
@@ -74,5 +75,9 @@ public class MainTesting {
         //}
 
         //System.out.println(db.Return.userUserIdByUsername("jorge"));
+
+        //System.out.println(db.Login.ReturnUserIdByLogIn("example2@example.com", "password123"));
+
+
     }
 }

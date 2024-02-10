@@ -179,12 +179,14 @@ public class InsertData{
     }
 
     // Buy new Book
-    public boolean BuyBook(double cost, int user_id, int book_id){
+    public boolean BuyBook(int user_id, int book_id){
 
         return false;
-        // TODO ReturnUserDetailsById
+        // TODO ReturnUserDetailsById JUST MAKE IT LOL
         // TODO AddNewBoughtBook
         // TODO IncreaseBookSoldByOne
+        // TODO GET book price
+        // TODO Get user cash
 
     }
 

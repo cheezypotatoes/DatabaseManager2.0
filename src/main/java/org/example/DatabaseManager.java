@@ -22,6 +22,7 @@ public class DatabaseManager {
     public CheckData Check;
     public UpdateData Update;
     public ReturnData Return;
+    public LoginData Login;
 
 
     /**
@@ -37,6 +38,7 @@ public class DatabaseManager {
         this.Insert = new InsertData(this.dataLocation, this.Check);
         this.Update = new UpdateData(this.dataLocation);
         this.Return = new ReturnData(this.dataLocation);
+        this.Login = new LoginData(this.dataLocation);
     }
 
     /**
