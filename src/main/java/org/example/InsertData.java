@@ -178,13 +178,6 @@ public class InsertData{
 
     }
 
-    // Buy new Book
-    public boolean BuyBook(int user_id, int book_id){
-
-        // TODO ReturnUserDetailsById JUST MAKE IT LOL
-        // TODO GET book price
-        return false;
-    }
 
     /**
      * Adds a bought book entry to the database.

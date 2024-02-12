@@ -1,8 +1,6 @@
 package org.example;
 
 
-import java.util.List;
-
 @SuppressWarnings("ALL")
 public class MainTesting {
 
@@ -85,6 +83,8 @@ public class MainTesting {
         //System.out.println(db.Return.returnUserCash(1));
 
         //System.out.println(db.Return.returnBookPrice(2));
+
+        db.Update.buyBook(1, 2);
 
     }
 }

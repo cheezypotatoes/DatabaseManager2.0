@@ -11,14 +11,18 @@ import java.util.logging.Logger;
 public class UpdateData {
 
     public String dataLocation;
+    public ReturnData Return;
+    public InsertData Insert;
 
     /**
      * Constructs a UpdateData object with the specified data location.
      *
      * @param dataLocation The location where the data is stored.
      */
-    public UpdateData(String dataLocation) {
+    public UpdateData(String dataLocation, ReturnData Return, InsertData Insert) {
         this.dataLocation = dataLocation;
+        this.Return = Return;
+        this.Insert = Insert;
     }
 
     /**
@@ -77,6 +81,40 @@ public class UpdateData {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error updating copies sold in book_details table", e);
         }
+    }
+
+    /**
+     * Buys a book for a user.
+     *
+     * @param user_id The ID of the user who is buying the book.
+     * @param book_id The ID of the book being bought.
+     * @return True if the book is successfully bought, false otherwise.
+     * This method buys a book for a user by performing the following steps:
+     * 1. Checks if the user has enough cash to buy the book.
+     * 2. If the user has enough cash, deducts the book price from the user's cash balance.
+     * 3. Records the purchase by adding a new row for the bought book.
+     * 4. Increases the number of copies sold for the book by one.
+     * Returns true if the book is successfully bought, false otherwise.
+     * Any SQL exceptions encountered are logged using appropriate loggers.
+     */
+    public boolean buyBook(int user_id, int book_id){
+        double usersCash = Return.returnUserCash(user_id);
+        double bookPrice = Return.returnBookPrice(book_id);
+
+        if ((usersCash - bookPrice) < 0){
+            System.out.println("Cash Not Enough");
+        }
+        else {
+            System.out.println("Successfully bought");
+            // Updates users cash
+            UpdateUserCash(user_id, usersCash - bookPrice);
+            // Record book (Make a new row for book bought)
+            Insert.AddBoughtBook(book_id, user_id);
+            // Add one to book sold
+            increaseBookSoldByOne(book_id);
+            return true;
+        }
+        return false;
     }
 
 

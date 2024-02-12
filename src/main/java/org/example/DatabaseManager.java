@@ -36,8 +36,8 @@ public class DatabaseManager {
         this.dataLocation = dataLocation;
         this.Check = new CheckData(this.dataLocation);
         this.Insert = new InsertData(this.dataLocation, this.Check);
-        this.Update = new UpdateData(this.dataLocation);
         this.Return = new ReturnData(this.dataLocation);
+        this.Update = new UpdateData(this.dataLocation, this.Return, this.Insert);
         this.Login = new LoginData(this.dataLocation);
     }
 
@@ -68,12 +68,6 @@ public class DatabaseManager {
                     + "password TEXT NOT NULL,"
                     + "is_admin BOOLEAN DEFAULT 0,"
                     + "balance REAL DEFAULT 0.0"
-                    + ");";
-
-            String createBookBoughtTableSQL = "CREATE TABLE IF NOT EXISTS book_bought ("
-                    + "user_id INTEGER,"
-                    + "book_id INTEGER,"
-                    + "FOREIGN KEY (user_id) REFERENCES users (id)"
                     + ");";
 
             String createBookGenreTableSQL = "CREATE TABLE IF NOT EXISTS book_genre ("
@@ -129,7 +123,6 @@ public class DatabaseManager {
             statement.execute(createUserTableSQL);
             statement.execute(createBookDescriptionTableSQL);
             statement.execute(createBookGenreTableSQL);
-            statement.execute(createBookBoughtTableSQL);
             statement.execute(createBookDetailsTableSQL);
             statement.execute(createAuthorTableSQL);
             statement.execute(createReviewTableSQL);
