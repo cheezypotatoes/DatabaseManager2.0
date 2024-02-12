@@ -12,7 +12,7 @@ public class MainTesting {
         DatabaseManager db = new DatabaseManager("jdbc:sqlite:test.db");
         db.createTablesIfNotExist();
 
-        //db.Insert.InsertNewUser("example2@example.com", "example_user", "password123", false, 100.0);
+        //db.Insert.InsertNewUser("example2@example.com", "example_user", "password123", false, 150.0);
 
         //db.Insert.InsertNewDescription("The Great Gatsby", "Pretty Much Good");
 
@@ -22,8 +22,8 @@ public class MainTesting {
 
         //db.Insert.InsertGenre("The Great Gatsby", "Comedy");
 
-        //db.Insert.InsertNewBook("The Secret Garden", "The Secret Garden.png", new String[]{"Fiction", "Children", "Classic"}, 456, true, 14.99, 50, "A timeless classic about a magical garden.");
-        //db.Insert.InsertNewBook("The Hitchhiker's Guide to the Galaxy", "The Hitchhiker's Guide to the Galaxy.png", new String[]{"Science Fiction", "Comedy", "Adventure"}, 789, true, 24.99, 75, "A hilarious adventure through space.");
+        //db.Insert.InsertNewBook("The Secret Garden", "The Secret Garden.png", new String[]{"Fiction", "Children", "Classic"}, 456, true, 14.99, 0, "A timeless classic about a magical garden.");
+        //db.Insert.InsertNewBook("The Hitchhiker's Guide to the Galaxy", "The Hitchhiker's Guide to the Galaxy.png", new String[]{"Science Fiction", "Comedy", "Adventure"}, 789, true, 24.99, 0, "A hilarious adventure through space.");
 
         //System.out.println(db.Check.CheckIfUserNameAlreadyExist("example_user"));
 
@@ -78,6 +78,13 @@ public class MainTesting {
 
         //System.out.println(db.Login.ReturnUserIdByLogIn("example2@example.com", "password123"));
 
+        //db.Insert.AddBoughtBook(1, 2);
+
+        //db.Update.increaseBookSoldByOne(1);
+
+        //System.out.println(db.Return.returnUserCash(1));
+
+        //System.out.println(db.Return.returnBookPrice(2));
 
     }
 }

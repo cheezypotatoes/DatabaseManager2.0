@@ -181,14 +181,43 @@ public class InsertData{
     // Buy new Book
     public boolean BuyBook(int user_id, int book_id){
 
-        return false;
         // TODO ReturnUserDetailsById JUST MAKE IT LOL
-        // TODO AddNewBoughtBook
-        // TODO IncreaseBookSoldByOne
         // TODO GET book price
-        // TODO Get user cash
+        return false;
+    }
+
+    /**
+     * Adds a bought book entry to the database.
+     *
+     * @param bookId The ID of the book being bought.
+     * @param userId The ID of the user who bought the book.
+     * This method inserts a new record into the "book_owned" table to indicate that a book has been bought by a user.
+     * The method sets the "is_owned" field to true for the bought book entry.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
+    public void AddBoughtBook(int bookId, int userId){
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String insertBookOwnedSQL = "INSERT INTO book_owned (book_id, user_id, is_owned) VALUES (?, ?, ?);";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(insertBookOwnedSQL)) {
+                preparedStatement.setInt(1, bookId);
+                preparedStatement.setInt(2, userId);
+                preparedStatement.setBoolean(3, true);
+
+                // Execute the SQL statement to insert data
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data inserted into book_owned table successfully");
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error inserting data into book_owned table", e);
+        }
 
     }
+
+
 
 
 

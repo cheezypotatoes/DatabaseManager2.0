@@ -50,4 +50,35 @@ public class UpdateData {
         }
     }
 
+    /**
+     * Increases the number of copies sold for a book by one.
+     *
+     * @param bookId The ID of the book for which copies sold are to be increased.
+     * This method updates the "copies_sold" field in the "book_details" table by incrementing it by one
+     * for the book with the specified ID.
+     * Any SQL exceptions encountered are logged using a logger named "UpdateDataLogger".
+     */
+    public void increaseBookSoldByOne(int bookId){
+        Logger logger = Logger.getLogger("UpdateDataLogger");
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String updateCopiesSoldSQL = "UPDATE book_details SET copies_sold = copies_sold + 1 WHERE id = ?;";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateCopiesSoldSQL)) {
+                preparedStatement.setInt(1, bookId);
+
+                // Execute the SQL statement to update copies_sold
+                int rowsAffected = preparedStatement.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println("Copies sold updated successfully");
+                } else {
+                    System.out.println("No book found with the given ID");
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updating copies sold in book_details table", e);
+        }
+    }
+
+
+
 }

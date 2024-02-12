@@ -297,7 +297,61 @@ public class ReturnData {
         return null;
     }
 
+    /**
+     * Returns the balance (cash) of a user based on the user ID.
+     *
+     * @param userId The ID of the user.
+     * @return The balance (cash) of the user with the given ID, or 0.0 if no such user is found or an error occurs.
+     * This method retrieves the balance (cash) of the user with the provided user ID from the "users" table in the database.
+     * It returns the balance if the user is found, otherwise, it returns 0.0.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
+    public double returnUserCash(int userId){
+        Logger logger = Logger.getLogger("InsertDataLogger");
 
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT balance FROM users WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getDouble("balance");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning cash", e);
+        }
+        return -0.0;
+    }
+
+    /**
+     * Returns the price of a book based on the book ID.
+     *
+     * @param bookId The ID of the book.
+     * @return The price of the book with the given ID, or -0.0 if no such book is found or an error occurs.
+     * This method retrieves the price of the book with the provided book ID from the "book_details" table in the database.
+     * It returns the price if the book is found, otherwise, it returns -0.0.
+     * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
+     */
+    public double returnBookPrice(int bookId){
+        Logger logger = Logger.getLogger("InsertDataLogger");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT price FROM book_details WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, bookId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getDouble("price");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning book price", e);
+        }
+        return -0.0;
+    }
 
 
     //TODO RETURN ALL BOOK BOUGHT BY USER, MAKE BUY BOOK FIRST
