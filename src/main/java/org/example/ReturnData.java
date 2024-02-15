@@ -496,9 +496,7 @@ public class ReturnData {
 
 
 
-
-
-    // TODO ReturnUserDetailsById JUST MAKE IT LOL
+    //TODO ReturnUserDetailsById JUST MAKE IT LOL
     //TODO RETURN ALL BOOK BOUGHT BY USER, MAKE BUY BOOK FIRST
     //TODO RETURN USER SPECIFIC DETAILS, MAKE BUY BOOK FIRST TO RETURN BOOK BOUGHT
     //TODO study logger
