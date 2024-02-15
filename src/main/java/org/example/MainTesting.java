@@ -10,7 +10,7 @@ public class MainTesting {
         DatabaseManager db = new DatabaseManager("jdbc:sqlite:test.db");
         db.createTablesIfNotExist();
 
-        //db.Insert.InsertNewUser("example2@example.com", "example_user", "password123", false, 150.0);
+        //db.Insert.InsertNewUser("example@example.com", "example_user", "password123", false, 150.0);
 
         //db.Insert.InsertNewDescription("The Great Gatsby", "Pretty Much Good");
 
@@ -65,7 +65,7 @@ public class MainTesting {
             //}
         //}
 
-        String[][] allBooks = db.Return.returnAllBooks();
+        //String[][] allBooks = db.Return.returnAllBooks();
 
         // Print the book data
         //for (String[] book : allBooks) {
@@ -87,7 +87,11 @@ public class MainTesting {
 
         //System.out.println(db.Return.returnBookPrice(2));
 
+        //db.Update.buyBook(1, 1);
         //db.Update.buyBook(1, 2);
+        //db.Update.buyBook(1, 3);
+        //db.Update.buyBook(1, 4);
+
 
         //String[] genreSelected = {"Comedy", "Horror"};
 
@@ -104,16 +108,34 @@ public class MainTesting {
             //System.out.println(title);
        //}
 
-        String[] genreSelected = {"Science Fiction", "Comedy", "Adventure"};
-        String[][] matchedBook = db.Return.returnBookDetailsByGenre(genreSelected);
+        //String[] genreSelected = {"Science Fiction", "Comedy", "Adventure"};
+        //String[][] matchedBook = db.Return.returnBookDetailsByGenre(genreSelected);
 
-        for (int i = 0; i < matchedBook.length; i++) {
-            for (int j = 0; j < matchedBook[i].length; j++) {
-                System.out.print(matchedBook[i][j] + " ");
-            }
+        //for (int i = 0; i < matchedBook.length; i++) {
+            //for (int j = 0; j < matchedBook[i].length; j++) {
+                //System.out.print(matchedBook[i][j] + " ");
+           //}
+           // System.out.println();
+       // }
+
+        //System.out.println(db.Check.CheckIfBookWasBought(22,1));
+
+        //db.Insert.InsertBookReview(1, 1, 4, "An excellent read! I couldn't put it down.");
+        //db.Insert.InsertBookReview(1, 2, 4, "Absolutely captivating! A must-read for everyone.");
+        //db.Insert.InsertBookReview(1, 3, 4, "This book exceeded my expectations. A true gem.");
+        //db.Insert.InsertBookReview(1, 4, 4, "Highly engaging plot and well-developed characters. Loved it!");
+
+
+        String[][] allReviews = db.Return.returnAllBooksReviewByUserId(1);
+
+
+        for (int i = 0; i < allReviews.length; i++) {
+            System.out.println("Book Id: " + allReviews[i][0]);
+            System.out.println("Book Rating: " + allReviews[i][1]);
+            System.out.println("Is Owned: : " + allReviews[i][2]);
+            System.out.println("Book Review: " + allReviews[i][3]);
             System.out.println();
         }
-
 
 
 

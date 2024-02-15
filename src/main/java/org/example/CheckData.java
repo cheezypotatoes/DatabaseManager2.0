@@ -81,7 +81,7 @@ public class CheckData {
      * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
      */
     public boolean CheckIfEmailAlreadyExist(String email) {
-        Logger logger = Logger.getLogger("InsertDataLogger");
+        Logger logger = Logger.getLogger("CheckIfEmailAlreadyExist");
         String query = "SELECT COUNT(*) FROM users WHERE email = ?";
         try (Connection connection = DriverManager.getConnection(this.dataLocation);
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -95,6 +95,35 @@ public class CheckData {
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Email Checker error", e);
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a book was bought by a specific user.
+     *
+     * @param bookId the ID of the book to check
+     * @param userId the ID of the user
+     * @return true if the book was bought by the user, false otherwise
+     *          This method queries the "book_owned" table in the database to check if the specified book
+     *          was bought by the specified user. It returns true if the book was bought, false otherwise.
+     */
+    public boolean CheckIfBookWasBought(int bookId, int userId){
+        Logger logger = Logger.getLogger("CheckIfBookWasBought");
+        String query = "SELECT COUNT(*) FROM book_owned WHERE book_id = ? AND user_id = ?";
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, bookId);
+            preparedStatement.setInt(2, userId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "CheckIfBookWasBought error", e);
         }
         return false;
     }

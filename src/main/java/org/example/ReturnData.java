@@ -475,7 +475,6 @@ public class ReturnData {
      *          It then returns an array of arrays containing specific details of each matched book.
      *          Each inner array represents the details of a single book.
      */
-
     public String[][] returnBookDetailsByGenre(String[] genre){
         List<String[]> bookData = new ArrayList<>();
         String[] bookMatchedByGenre = returnBookTitleByGenre(genre); // Get All Book Title That Matches All Genre
@@ -492,6 +491,56 @@ public class ReturnData {
         return bookDataArray;
 
     }
+
+    /**
+     * Returns all book reviews submitted by a specific user.
+     *
+     * @param userId the ID of the user
+     * @return a 2D array containing book reviews submitted by the specified user
+     *          Each inner array contains the book ID, rating, review text, and ownership status of a book.
+     *          This method queries the "book_reviews" table in the database to retrieve all reviews
+     *          submitted by the specified user. It returns a 2D array containing details of each review.
+     *          Any SQL exceptions encountered are logged using a logger named "returnAllBooksReviewByUserId".
+     */
+    public String[][] returnAllBooksReviewByUserId(int userId) {
+        Logger logger = Logger.getLogger("returnAllBooksReviewByUserId");
+        ArrayList<String[]> booksBought = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT review, rating, book_id, is_owned "
+                    + "FROM book_reviews WHERE user_id = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String[] bookRatingReview = new String[4];
+                        bookRatingReview[0] = String.valueOf(resultSet.getInt("book_id"));
+                        bookRatingReview[1] = String.valueOf(resultSet.getInt("rating"));
+                        bookRatingReview[2] = resultSet.getString("review");
+                        bookRatingReview[3] = String.valueOf(resultSet.getBoolean("is_owned"));
+                        booksBought.add(bookRatingReview);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returnAllBooksReviewByUserId", e);
+        }
+
+        String[][] bookDataArray = new String[booksBought.size()][2];
+        for (int i = 0; i < booksBought.size(); i++) {
+            bookDataArray[i] = booksBought.get(i);
+        }
+
+        return bookDataArray;
+    }
+
+
+
+
+
+
 
 
 

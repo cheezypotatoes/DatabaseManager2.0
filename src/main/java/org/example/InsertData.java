@@ -210,6 +210,42 @@ public class InsertData{
 
     }
 
+    /**
+     * Inserts a book review into the database.
+     *
+     * @param userId the ID of the user submitting the review
+     * @param bookId the ID of the book being reviewed
+     * @param rating the rating given to the book
+     * @param reviewText the text of the review
+     *          This method inserts a book review into the "book_reviews" table in the database.
+     *          It includes the user ID, book ID, rating, review text, and whether the user owns the book.
+     *          The review is inserted into the database after checking if the user owns the book.
+     *          Any SQL exceptions encountered are logged using a logger named "InsertBookReview".
+     */
+    public void InsertBookReview(int userId, int bookId, int rating, String reviewText){
+        Logger logger = Logger.getLogger("InsertBookReview");
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            // SQL statement to insert data into the "book_reviews" table
+            String insertBookReviewSQL = "INSERT INTO book_reviews (book_id, user_id, rating, review, is_owned) VALUES (?, ?, ?, ?, ?);";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(insertBookReviewSQL)) {
+                preparedStatement.setInt(1, bookId);
+                preparedStatement.setInt(2, userId);
+                preparedStatement.setInt(3, rating);
+                preparedStatement.setString(4, reviewText);
+                preparedStatement.setBoolean(5, this.check.CheckIfBookWasBought(bookId, userId));
+
+                // Execute the SQL statement to insert data
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data inserted into book_reviews table successfully");
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error inserting data into book_reviews table", e);
+        }
+    }
+
 
 
 
