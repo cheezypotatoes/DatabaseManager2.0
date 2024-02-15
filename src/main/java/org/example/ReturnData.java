@@ -1,13 +1,11 @@
 package org.example;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.ArrayList;
 
-@SuppressWarnings("SqlDialectInspection")
+@SuppressWarnings({"SqlDialectInspection", "DuplicatedCode"})
 public class ReturnData {
 
     public String dataLocation;
@@ -229,7 +227,7 @@ public class ReturnData {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
                         // Create an array to hold book data
-                        String[] bookRow = new String[8]; // Assuming 7 columns in the "book_details" table
+                        String[] bookRow = new String[9]; // Assuming 7 columns in the "book_details" table
                         // Populate the array with book data from the result set
                         bookRow[0] = Integer.toString(resultSet.getInt("id"));
                         bookRow[1] = resultSet.getString("title");
@@ -238,6 +236,7 @@ public class ReturnData {
                         bookRow[4] = resultSet.getBoolean("is_available") ? "true" : "false";
                         bookRow[5] = Double.toString(resultSet.getDouble("price"));
                         bookRow[6] = Integer.toString(resultSet.getInt("copies_sold"));
+                        bookRow[7] = returnBookDescriptionByTitle(bookRow[1]);
                         String[] genres = returnBookGenreByTitle(bookRow[1]);
                         if (genres != null && genres.length > 0) {
                             // Join genres into a single string
@@ -247,9 +246,9 @@ public class ReturnData {
                             }
                             // Remove the last comma and space
                             String genreString = genreStringBuilder.substring(0, genreStringBuilder.length() - 2);
-                            bookRow[7] = genreString;
+                            bookRow[8] = genreString;
                         } else {
-                            bookRow[7] = ""; // No genres found
+                            bookRow[8] = ""; // No genres found
                         }
                         // Add the array to the list
                         bookData.add(bookRow);
@@ -353,9 +352,156 @@ public class ReturnData {
         return -0.0;
     }
 
+    /**
+     * Returns an array of book titles based on the given genres.
+     *
+     * @param genre an array of genre strings
+     * @return an array of book titles matching the specified genres
+     *          This method queries the "book_genre" table in the database to retrieve book titles
+     *          associated with the provided genres. It returns an array containing these titles.
+     *          Any SQL exceptions encountered are logged using a logger named "ReturnBookTitleByGenre".
+     */
+    public String[] returnBookTitleByGenre(String[] genre) {
+        Logger logger = Logger.getLogger("ReturnBookTitleByGenre");
+        Set<String> set = new HashSet<>();
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT title FROM book_genre WHERE genre = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                for (String s : genre) {
+                    preparedStatement.setString(1, s);
+                    try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                        if (!resultSet.isBeforeFirst()) {
+                            set.clear();
+                        } else {
+                            while (resultSet.next()) {
+                                set.add(resultSet.getString("title"));
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returning book titles by genre", e);
+        }
+
+        // Convert set to array
+        return set.toArray(new String[0]);
+    }
+
+    /**
+     * Returns an array containing specific details of a book based on the book title.
+     *
+     * @param bookTitle the title of the book
+     * @return an array containing specific details of the book, including ID, title, image link, author ID,
+     *          availability, price, number of copies sold, description, and genres
+     *          This method queries the "book_details" table in the database to retrieve specific details
+     *          of the book with the provided title. It returns an array containing these details.
+     *          Any SQL exceptions encountered are logged using a logger named "SpecificBookDetails".
+     */
+    public String[] returnSpecificBookDetailsByTitle(String bookTitle) {
+        Logger logger = Logger.getLogger("SpecificBookDetails");
+        String[] bookRow = new String[9]; // Create an array to hold book data
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT * FROM book_details WHERE title = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, bookTitle); // Set the bookTitle parameter
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        // Populate the array with book data from the result set
+                        bookRow[0] = Integer.toString(resultSet.getInt("id"));
+                        bookRow[1] = resultSet.getString("title");
+                        bookRow[2] = resultSet.getString("image_link");
+                        bookRow[3] = Integer.toString(resultSet.getInt("author_id"));
+                        bookRow[4] = resultSet.getBoolean("is_available") ? "true" : "false";
+                        bookRow[5] = Double.toString(resultSet.getDouble("price"));
+                        bookRow[6] = Integer.toString(resultSet.getInt("copies_sold"));
+                        bookRow[7] = returnBookDescriptionByTitle(bookRow[1]);
+                        String[] genres = returnBookGenreByTitle(bookRow[1]);
+                        if (genres != null && genres.length > 0) {
+                            // Join genres into a single string
+                            StringBuilder genreStringBuilder = new StringBuilder();
+                            for (String genre : genres) {
+                                genreStringBuilder.append(genre).append(", ");
+                            }
+                            // Remove the last comma and space
+                            String genreString = genreStringBuilder.substring(0, genreStringBuilder.length() - 2);
+                            bookRow[8] = genreString;
+                        } else {
+                            bookRow[8] = ""; // No genres found
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning Specific Book Details", e);
+        }
+
+        return bookRow;
+    }
+
+    /**
+     * Returns a string representation of genres associated with a book.
+     *
+     * @param bookRow an array containing details of a book, including its title
+     * @return a string containing genres associated with the book, separated by commas
+     *          This method retrieves the genres associated with the book specified in the provided bookRow array
+     *          and returns them as a single string, with genres separated by commas. If no genres are found,
+     *          an empty string is returned.
+     */
+
+    public String getGenreString(String[] bookRow) {
+        String[] genres = returnBookGenreByTitle(bookRow[1]);
+        if (genres != null && genres.length > 0) {
+            // Join genres into a single string
+            StringBuilder genreStringBuilder = new StringBuilder();
+            for (String genre : genres) {
+                genreStringBuilder.append(genre).append(", ");
+            }
+            // Remove the last comma and space
+            return genreStringBuilder.substring(0, genreStringBuilder.length() - 2);
+        } else {
+            return ""; // No genres found
+        }
+    }
+
+    /**
+     * Returns an array of arrays containing details of books matching the specified genres.
+     *
+     * @param genre an array of genre strings
+     * @return an array of arrays containing details of books matching the specified genres
+     *          This method retrieves books matching the provided genres by querying the database.
+     *          It then returns an array of arrays containing specific details of each matched book.
+     *          Each inner array represents the details of a single book.
+     */
+
+    public String[][] returnBookDetailsByGenre(String[] genre){
+        List<String[]> bookData = new ArrayList<>();
+        String[] bookMatchedByGenre = returnBookTitleByGenre(genre); // Get All Book Title That Matches All Genre
+
+        // Get Specific Details For Each Title
+        for (String title : bookMatchedByGenre){
+            bookData.add(returnSpecificBookDetailsByTitle(title));
+        }
+
+        // Convert The Arraylist into A 2d Array
+        String[][] bookDataArray = new String[bookData.size()][];
+        bookData.toArray(bookDataArray);
+
+        return bookDataArray;
+
+    }
+
+
+
+
+
+
     // TODO ReturnUserDetailsById JUST MAKE IT LOL
     //TODO RETURN ALL BOOK BOUGHT BY USER, MAKE BUY BOOK FIRST
     //TODO RETURN USER SPECIFIC DETAILS, MAKE BUY BOOK FIRST TO RETURN BOOK BOUGHT
+    //TODO study logger
 
 
 }

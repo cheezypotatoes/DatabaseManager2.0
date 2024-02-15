@@ -22,6 +22,9 @@ public class MainTesting {
 
         //db.Insert.InsertNewBook("The Secret Garden", "The Secret Garden.png", new String[]{"Fiction", "Children", "Classic"}, 456, true, 14.99, 0, "A timeless classic about a magical garden.");
         //db.Insert.InsertNewBook("The Hitchhiker's Guide to the Galaxy", "The Hitchhiker's Guide to the Galaxy.png", new String[]{"Science Fiction", "Comedy", "Adventure"}, 789, true, 24.99, 0, "A hilarious adventure through space.");
+        //db.Insert.InsertNewBook("The Classic Book Title", "classic_book_cover.png", new String[]{"Classic"}, 123, true, 19.99, 0, "Description of the classic book.");
+        //db.Insert.InsertNewBook("The Quantum Quirk Chronicles: Galactic Guffaws", "quantum_quirk_cover.png", new String[]{"Science Fiction", "Comedy", "Adventure"}, 1, true, 24.99, 10, "Join Captain Zara and her eccentric crew aboard the starship 'Quasar Quest' as they navigate the zany and unpredictable galaxy filled with quantum anomalies and cosmic calamities. In this uproarious adventure, they encounter sentient space llamas, time-traveling parrots, and a mischievous AI with a penchant for practical jokes. Get ready for a rollercoaster ride of laughter and excitement in this side-splitting space romp!");
+
 
         //System.out.println(db.Check.CheckIfUserNameAlreadyExist("example_user"));
 
@@ -62,7 +65,7 @@ public class MainTesting {
             //}
         //}
 
-        //String[][] allBooks = db.Return.returnAllBooks();
+        String[][] allBooks = db.Return.returnAllBooks();
 
         // Print the book data
         //for (String[] book : allBooks) {
@@ -84,7 +87,37 @@ public class MainTesting {
 
         //System.out.println(db.Return.returnBookPrice(2));
 
-        db.Update.buyBook(1, 2);
+        //db.Update.buyBook(1, 2);
+
+        //String[] genreSelected = {"Comedy", "Horror"};
+
+
+        //String[] book_title_selected = db.Return.returnBookTitleByGenre(genreSelected);
+       // for (String title : book_title_selected) {
+            //System.out.println(title);
+        //}
+
+        //String[][] searchedBooks = db.Return.returnSearchedBook(genreSelected);
+
+        //String[] specific_return_book = db.Return.returnSpecificBookDetailsByTitle("The Hitchhiker's Guide to the Galaxy");
+        //for (String title : specific_return_book) {
+            //System.out.println(title);
+       //}
+
+        String[] genreSelected = {"Science Fiction", "Comedy", "Adventure"};
+        String[][] matchedBook = db.Return.returnBookDetailsByGenre(genreSelected);
+
+        for (int i = 0; i < matchedBook.length; i++) {
+            for (int j = 0; j < matchedBook[i].length; j++) {
+                System.out.print(matchedBook[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+
+
+
+
 
     }
 }
