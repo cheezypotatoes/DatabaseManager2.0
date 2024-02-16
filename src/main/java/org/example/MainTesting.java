@@ -10,7 +10,7 @@ public class MainTesting {
         DatabaseManager db = new DatabaseManager("jdbc:sqlite:test.db");
         db.createTablesIfNotExist();
 
-        //db.Insert.InsertNewUser("example@example.com", "example_user", "password123", false, 150.0);
+        //db.Insert.InsertNewUser("example2@example.com", "example_user", "password123", false, 150.0);
 
         //db.Insert.InsertNewDescription("The Great Gatsby", "Pretty Much Good");
 
@@ -126,16 +126,44 @@ public class MainTesting {
         //db.Insert.InsertBookReview(1, 4, 4, "Highly engaging plot and well-developed characters. Loved it!");
 
 
-        String[][] allReviews = db.Return.returnAllBooksReviewByUserId(1);
+        //String[][] allReviews = db.Return.returnAllBooksReviewByUserId(1);
 
 
-        for (int i = 0; i < allReviews.length; i++) {
-            System.out.println("Book Id: " + allReviews[i][0]);
-            System.out.println("Book Rating: " + allReviews[i][1]);
-            System.out.println("Is Owned: : " + allReviews[i][2]);
-            System.out.println("Book Review: " + allReviews[i][3]);
-            System.out.println();
-        }
+        //for (int i = 0; i < allReviews.length; i++) {
+           // System.out.println("Book Id: " + allReviews[i][0]);
+            //System.out.println("Book Rating: " + allReviews[i][1]);
+            //System.out.println("Is Owned: : " + allReviews[i][2]);
+            //System.out.println("Book Review: " + allReviews[i][3]);
+            //System.out.println();
+       // }
+
+
+
+        //System.out.println(db.Return.returnAuthorNameByID(1));
+
+        //[] bookData = db.Return.returnBookDataById(1);
+
+        //if (bookData != null) {
+            // Print the book data
+            //System.out.println("Book ID: " + bookData[0]);
+            //System.out.println("Title: " + bookData[1]);
+            //System.out.println("Image Link: " + bookData[2]);
+            //System.out.println("Author ID: " + bookData[3]);
+            //System.out.println("Is Available: " + bookData[4]);
+            //System.out.println("Price: " + bookData[5]);
+            //System.out.println("Copies Sold: " + bookData[6]);
+            //System.out.println("Description: " + bookData[7]);
+            //System.out.println("Genres: " + bookData[8]);
+       // }
+
+        //System.out.println(db.Return.ReturnLatestId());
+
+
+        //db.Insert.AdminBookInserter("To Kill a Mockingbird", "To Kill a Mockingbird.jpeg", new String[]{"Fiction", "Classic"}, "Harper Lee", true, 12.50, 150, "A powerful story about racial injustice in the American South.");
+
+
+
+
 
 
 

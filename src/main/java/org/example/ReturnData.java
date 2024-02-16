@@ -276,7 +276,7 @@ public class ReturnData {
      * It returns the user ID if the username is found, otherwise, it returns null.
      * Any SQL exceptions encountered are logged using a logger named "InsertDataLogger".
      */
-    public String userUserIdByUsername(String username){
+    public String UserIdByUsername(String username){
         Logger logger = Logger.getLogger("InsertDataLogger");
 
         try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
@@ -500,9 +500,9 @@ public class ReturnData {
      *          Each inner array contains the book ID, rating, review text, and ownership status of a book.
      *          This method queries the "book_reviews" table in the database to retrieve all reviews
      *          submitted by the specified user. It returns a 2D array containing details of each review.
-     *          Any SQL exceptions encountered are logged using a logger named "returnAllBooksReviewByUserId".
+     *          Any SQL exceptions encountered are logged using a logger named "returnBoughtBookByUser".
      */
-    public String[][] returnAllBooksReviewByUserId(int userId) {
+    public String[][] returnBoughtBookByUser(int userId) {
         Logger logger = Logger.getLogger("returnAllBooksReviewByUserId");
         ArrayList<String[]> booksBought = new ArrayList<>();
 
@@ -525,7 +525,7 @@ public class ReturnData {
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error returnAllBooksReviewByUserId", e);
+            logger.log(Level.SEVERE, "Error returnBoughtBookByUser", e);
         }
 
         String[][] bookDataArray = new String[booksBought.size()][2];
@@ -535,6 +535,92 @@ public class ReturnData {
 
         return bookDataArray;
     }
+
+    public String returnAuthorNameByID(int userId) {
+        Logger logger = Logger.getLogger("returnAuthorNameByID");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT username FROM users WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getString("username");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returnAuthorNameByID", e);
+        }
+
+        return null;
+    }
+
+    public String[] returnBookDataById(int bookId){
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        String[] bookDataArray = null; // Initialize the array to return
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT * FROM book_details WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, bookId); // Set the parameter for the book ID
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        // Create an array to hold book data
+                        String[] bookRow = new String[9]; // Assuming 9 fields for the book
+                        // Populate the array with book data from the result set
+                        bookRow[0] = Integer.toString(resultSet.getInt("id")); //id
+                        bookRow[1] = resultSet.getString("title"); // title
+                        bookRow[2] = returnBookDescriptionByTitle(bookRow[1]); // description
+                        bookRow[3] = resultSet.getString("image_link"); // link
+                        bookRow[5] = Integer.toString(resultSet.getInt("author_id")); // author id
+                        bookRow[6] = resultSet.getBoolean("is_available") ? "true" : "false"; // availability
+                        bookRow[7] = Double.toString(resultSet.getDouble("price")); // price
+                        bookRow[8] = Integer.toString(resultSet.getInt("copies_sold")); // book sold
+                        String[] genres = returnBookGenreByTitle(bookRow[1]);
+                        if (genres != null && genres.length > 0) {
+                            // Join genres into a single string
+                            StringBuilder genreStringBuilder = new StringBuilder();
+                            for (String genre : genres) {
+                                genreStringBuilder.append(genre).append(", ");
+                            }
+                            // Remove the last comma and space
+                            String genreString = genreStringBuilder.substring(0, genreStringBuilder.length() - 2);
+                            bookRow[4] = genreString; // genre
+                        }
+                        bookDataArray = bookRow; // Assign the book data array to return
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning Books", e);
+        }
+
+        return bookDataArray; // Return the book data array
+    }
+
+    public int returnLatestUserId(){
+        Logger logger = Logger.getLogger("returnLatestUserId");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getInt("id");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returnLatestUserId", e);
+        }
+
+        return -1;
+    }
+
+
+
+
 
 
 

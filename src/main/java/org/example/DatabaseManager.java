@@ -35,8 +35,8 @@ public class DatabaseManager {
     public DatabaseManager(String dataLocation) {
         this.dataLocation = dataLocation;
         this.Check = new CheckData(this.dataLocation);
-        this.Insert = new InsertData(this.dataLocation, this.Check);
         this.Return = new ReturnData(this.dataLocation);
+        this.Insert = new InsertData(this.dataLocation, this.Check, this.Return);
         this.Update = new UpdateData(this.dataLocation, this.Return, this.Insert);
         this.Login = new LoginData(this.dataLocation);
     }

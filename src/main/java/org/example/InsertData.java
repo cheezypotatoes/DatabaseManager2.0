@@ -12,6 +12,8 @@ public class InsertData{
 
     public String dataLocation;
     public CheckData check;
+    public ReturnData Return;
+
 
 
     /**
@@ -19,9 +21,10 @@ public class InsertData{
      *
      * @param dataLocation The location where the data is stored.
      */
-    public InsertData(String dataLocation, CheckData check) {
+    public InsertData(String dataLocation, CheckData check, ReturnData Return) {
         this.dataLocation = dataLocation;
         this.check = check;
+        this.Return = Return;
 
     }
 
@@ -244,6 +247,27 @@ public class InsertData{
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error inserting data into book_reviews table", e);
         }
+    }
+
+    public void AdminBookInserter(String title, String imageLink, String[] genre, String authorName,
+                                  boolean availability, double bookPrice, int bookSold, String description){
+
+        int author_id;
+
+        if (this.check.CheckIfUserNameAlreadyExist(authorName)){
+            author_id = Integer.parseInt(Return.UserIdByUsername(authorName));
+            System.out.println("Author already exist name = " + authorName);
+        } else{
+            author_id = Return.returnLatestUserId() + 1;
+            //String email, String username, String password, Boolean isAdmin, double balance
+            InsertNewUser("DefaultEmail@gmail.com", authorName, "DEFAULT_PASSWORD", false, 0);
+            System.out.println("Author Not In Database. Making New User. Name = " + authorName + "Author Id = " + author_id);
+
+
+        }
+        InsertNewBook(title, imageLink, genre, author_id, availability, bookPrice, bookSold, description);
+
+
     }
 
 
