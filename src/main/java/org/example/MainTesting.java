@@ -160,7 +160,12 @@ public class MainTesting {
 
 
         //db.Insert.AdminBookInserter("To Kill a Mockingbird", "To Kill a Mockingbird.jpeg", new String[]{"Fiction", "Classic"}, "Harper Lee", true, 12.50, 150, "A powerful story about racial injustice in the American South.");
+        //db.Insert.AdminBookInserter("1984", "1984_cover.jpg", new String[]{"Fiction", "Dystopian"}, "George Orwell", false, 10.99, 200, "A dystopian novel set in a totalitarian regime, exploring themes of surveillance, censorship, and government oppression.");
+        //db.Insert.AdminBookInserter("Animal Farm", "Animal_Farm_cover.jpg", new String[]{"Fiction", "Political Satire"}, "George Orwell", false, 9.99, 180, "An allegorical novella depicting a group of farm animals who rebel against their human farmer, reflecting events leading up to the Russian Revolution and the Stalinist era of the Soviet Union.");
+        //db.Insert.AdminBookInserter("The Great Gatsby", "The_Great_Gatsby_cover.jpg", new String[]{"Fiction", "Classic"}, "F. Scott Fitzgerald", true, 11.99, 150, "A novel set in the Jazz Age, depicting the lavish and decadent lifestyle of Long Island's elite, exploring themes of wealth, love, and the American Dream.");
+        //db.Insert.insertAuthor(3,"hello2");
 
+        //System.out.println(db.Return.returnAuthorId(3));
 
 
 

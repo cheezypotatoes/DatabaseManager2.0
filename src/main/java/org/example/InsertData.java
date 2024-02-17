@@ -252,23 +252,54 @@ public class InsertData{
     public void AdminBookInserter(String title, String imageLink, String[] genre, String authorName,
                                   boolean availability, double bookPrice, int bookSold, String description){
 
-        int author_id;
+        int userId;
+        int authorId;
 
         if (this.check.CheckIfUserNameAlreadyExist(authorName)){
-            author_id = Integer.parseInt(Return.UserIdByUsername(authorName));
+            // Get user id
+            userId = Integer.parseInt(Return.UserIdByUsername(authorName));
+            // Get author id (safe to say if user exist then author id exist)
+            authorId = Return.returnAuthorId(userId);
             System.out.println("Author already exist name = " + authorName);
         } else{
-            author_id = Return.returnLatestUserId() + 1;
-            //String email, String username, String password, Boolean isAdmin, double balance
+            // Insert User
             InsertNewUser("DefaultEmail@gmail.com", authorName, "DEFAULT_PASSWORD", false, 0);
-            System.out.println("Author Not In Database. Making New User. Name = " + authorName + "Author Id = " + author_id);
+            // Get the user id of new inserted user
+            userId = Integer.parseInt(Return.UserIdByUsername(authorName));
+            // Insert it to the author with blank description
+            insertAuthor(userId, "");
+            // Get the author id
+            authorId = Return.returnAuthorId(userId);
+            System.out.println("Author Not In Database. Making New User. Name = " + authorName + "Author Id = " + userId);
 
 
         }
-        InsertNewBook(title, imageLink, genre, author_id, availability, bookPrice, bookSold, description);
-
+        InsertNewBook(title, imageLink, genre, authorId, availability, bookPrice, bookSold, description);
 
     }
+
+
+    public void insertAuthor(int userId, String description){
+        Logger logger = Logger.getLogger("InsertBookReview");
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            // SQL statement to insert data into the "book_reviews" table
+            String insertBookReviewSQL = "INSERT INTO author (user_id, description) VALUES (?, ?);";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(insertBookReviewSQL)) {
+                preparedStatement.setInt(1, userId);
+                preparedStatement.setString(2, description);
+                // Execute the SQL statement to insert data
+                preparedStatement.executeUpdate();
+
+                System.out.println("Data inserted into author table successfully");
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error inserting data into author table", e);
+        }
+    }
+
+    
 
 
 

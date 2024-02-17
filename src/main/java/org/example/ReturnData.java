@@ -619,6 +619,30 @@ public class ReturnData {
     }
 
 
+    public int returnAuthorId(int userId){
+        Logger logger = Logger.getLogger("returnAuthorId");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT id FROM author WHERE user_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getInt("id");
+                    }
+                } catch (SQLException e) {
+                    logger.log(Level.SEVERE, "Error retrieving author ID", e);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error connecting to database", e);
+        }
+
+        return -1; // or any other appropriate default value
+    }
+
+
 
 
 
