@@ -10,7 +10,7 @@ public class MainTesting {
         DatabaseManager db = new DatabaseManager("jdbc:sqlite:test.db");
         db.createTablesIfNotExist();
 
-        //db.Insert.InsertNewUser("example2@example.com", "example_user", "password123", false, 150.0);
+        //db.Insert.InsertNewUser("example32@example.com", "example_user", "password123", false, 150.0);
 
         //db.Insert.InsertNewDescription("The Great Gatsby", "Pretty Much Good");
 
@@ -88,9 +88,9 @@ public class MainTesting {
         //System.out.println(db.Return.returnBookPrice(2));
 
         //db.Update.buyBook(1, 1);
-        //db.Update.buyBook(1, 2);
-        //db.Update.buyBook(1, 3);
-        //db.Update.buyBook(1, 4);
+        //db.Update.buyBook(5, 2);
+        //db.Update.buyBook(5, 3);
+        //db.Update.buyBook(5, 4);
 
 
         //String[] genreSelected = {"Comedy", "Horror"};
@@ -166,6 +166,14 @@ public class MainTesting {
         //db.Insert.insertAuthor(3,"hello2");
 
         //System.out.println(db.Return.returnAuthorId(3));
+
+
+        int[] notOwnedBooks = db.Return.returnAllNotBoughtBooks(5);
+
+
+        for (int e : notOwnedBooks){
+            System.out.println(String.valueOf(e));
+        }
 
 
 

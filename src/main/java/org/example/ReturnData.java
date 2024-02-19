@@ -643,6 +643,36 @@ public class ReturnData {
     }
 
 
+    public int[] returnAllNotBoughtBooks(int userId) {
+        Logger logger = Logger.getLogger("returnAllNotBoughtBooks");
+        List<Integer> bookIds = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT book_details.id AS not_owned_book " +
+                    "FROM book_details " +
+                    "LEFT JOIN book_owned ON book_details.id = book_owned.book_id AND book_owned.user_id = ? " +
+                    "WHERE book_owned.book_id IS NULL";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        bookIds.add(resultSet.getInt("not_owned_book"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error retrieving not bought books", e);
+        }
+
+        int[] result = new int[bookIds.size()];
+        for (int i = 0; i < bookIds.size(); i++) {
+            result[i] = bookIds.get(i);
+        }
+
+        return result;
+    }
+
 
 
 
