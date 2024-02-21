@@ -673,8 +673,52 @@ public class ReturnData {
         return result;
     }
 
+    //TODO: Search Empty Return ALL GENRE (use the old method for it)
+    //TODO: Search for description
+    //TODO: Improve security (genre without format is fine I guess)
 
+    public List<Integer> returnSearch(String searchBy, List<String> genre, String keyword){
+        Logger logger = Logger.getLogger("ReturnSearch");
+        List<Integer> bookIds = new ArrayList<>();
+        String query = "";
+        switch (searchBy) {
+            case "BookName":
+                System.out.println("Search by Book Name");
+                query = String.format("SELECT bd.id, bd.title FROM book_details bd WHERE title LIKE '%%%s%%'", keyword);
+            break;
+            case "Author":
+                System.out.println("Search by Author");
+                query = String.format("SELECT bd.id, bd.title " +
+                        "FROM book_Details bd " +
+                        "WHERE author_id = (SELECT id FROM author WHERE user_id = (SELECT id FROM users WHERE username LIKE '%%%s%%'));", keyword);
+                break;
+            default:
+                System.out.println("Invalid search option");
+                return bookIds;
+                }
 
+        if (!genre.isEmpty()) {
+            for (String g : genre) {
+                query += String.format(" AND bd.title IN (SELECT title FROM book_genre WHERE genre = '%s')", g);
+            }
+        }
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        bookIds.add(resultSet.getInt("id"));
+
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error retrieving not bought books", e);
+        }
+
+        return bookIds;
+    }
 
 
 

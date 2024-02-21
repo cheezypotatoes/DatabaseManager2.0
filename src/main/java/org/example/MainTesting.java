@@ -1,6 +1,9 @@
 package org.example;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("ALL")
 public class MainTesting {
 
@@ -168,11 +171,20 @@ public class MainTesting {
         //System.out.println(db.Return.returnAuthorId(3));
 
 
-        int[] notOwnedBooks = db.Return.returnAllNotBoughtBooks(5);
+        //int[] notOwnedBooks = db.Return.returnAllNotBoughtBooks(5);
 
 
-        for (int e : notOwnedBooks){
-            System.out.println(String.valueOf(e));
+        //for (int e : notOwnedBooks){
+            //System.out.println(String.valueOf(e));
+        //}
+
+        List<String> gen= new ArrayList<>();
+        gen.add("Fiction");
+        gen.add("Political Satire");
+        List<Integer> result =db.Return.returnSearch("Author", gen, "Orwell");
+
+        for (int g : result){
+            System.out.println(g);
         }
 
 
