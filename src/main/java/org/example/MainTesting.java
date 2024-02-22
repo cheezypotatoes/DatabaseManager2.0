@@ -179,9 +179,11 @@ public class MainTesting {
         //}
 
         List<String> gen= new ArrayList<>();
-        gen.add("Fiction");
-        gen.add("Political Satire");
-        List<Integer> result =db.Return.returnSearch("Author", gen, "Orwell");
+        //gen.add("Classic");
+        //gen.add("horror");
+        // user 5 bought num 2
+
+        List<Integer> result =db.Return.returnSearch("Book Name", gen, "", true, 5);
 
         for (int g : result){
             System.out.println(g);

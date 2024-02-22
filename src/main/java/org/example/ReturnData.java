@@ -674,37 +674,66 @@ public class ReturnData {
     }
 
     //TODO: Search Empty Return ALL GENRE (use the old method for it)
-    //TODO: Search for description
-    //TODO: Improve security (genre without format is fine I guess)
+    //TODO: Possible optimization
 
-    public List<Integer> returnSearch(String searchBy, List<String> genre, String keyword){
+    public List<Integer> returnSearch(String searchBy, List<String> genre, String keyword, Boolean ShowOwned, int UserId){
         Logger logger = Logger.getLogger("ReturnSearch");
         List<Integer> bookIds = new ArrayList<>();
         String query = "";
+
         switch (searchBy) {
-            case "BookName":
+            case "Book Name": // HANDLES THE BOOK NAME
                 System.out.println("Search by Book Name");
-                query = String.format("SELECT bd.id, bd.title FROM book_details bd WHERE title LIKE '%%%s%%'", keyword);
+                query = "SELECT bd.id, bd.title FROM book_details bd WHERE title LIKE ?";
             break;
-            case "Author":
+            case "Author": // HANDLES THE AUTHOR
                 System.out.println("Search by Author");
-                query = String.format("SELECT bd.id, bd.title " +
-                        "FROM book_Details bd " +
-                        "WHERE author_id = (SELECT id FROM author WHERE user_id = (SELECT id FROM users WHERE username LIKE '%%%s%%'));", keyword);
+                query = "SELECT bd.id, bd.title " +
+                        "FROM book_details bd " +
+                        "WHERE author_id = (SELECT id FROM author WHERE user_id = (SELECT id FROM users WHERE username LIKE ?));";
+                break;
+            case "Description": // HANDLES THE DESCRIPTION
+                System.out.println("Search by Description");
+                query = "SELECT bd.id, bd.title " +
+                        "FROM book_details bd " +
+                        "WHERE bd.title IN (" +
+                        "    SELECT book_title " +
+                        "    FROM book_description " +
+                        "    WHERE description LIKE ?" +
+                        ")";
                 break;
             default:
                 System.out.println("Invalid search option");
                 return bookIds;
                 }
 
+        // ADDS FILTER FOR GENRE IF THERES A GENRE INSERTED IN LINKED LIST
         if (!genre.isEmpty()) {
             for (String g : genre) {
+                System.out.println(g);
                 query += String.format(" AND bd.title IN (SELECT title FROM book_genre WHERE genre = '%s')", g);
+
             }
+        }
+
+        if (!ShowOwned){ // Exclude All Bought Book
+            System.out.println("Exclude the Book Bought");
+            query += String.format(" AND bd.id NOT IN (SELECT book_id FROM book_owned WHERE user_id = %d)", UserId);
+        }
+
+        // CANNOT USE OR MUST BE SPECIFIED
+        if (keyword.isEmpty() && genre.isEmpty()){ // If keyword and genre is empty just return Everything
+            System.out.println("KEYWORD AND GENRE IS EMPTY RETURN ALL BOOK ID INSTEAD");
+            return returnAllBookId(genre, ShowOwned, UserId);
+        } else if (keyword.isEmpty() && !genre.isEmpty()) { // If keyword is empty but genre is not
+            System.out.println("KEYWORD IS EMPTY RETURN ALL BOOK MATCHES THE GENRE");
+            return returnAllBookId(genre, ShowOwned, UserId);
         }
 
         try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1,  "%" + keyword + "%");
+                System.out.println(query);
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
@@ -719,6 +748,50 @@ public class ReturnData {
 
         return bookIds;
     }
+
+    public List<Integer> returnAllBookId(List<String> genre, boolean ShowOwned, int UserId) {
+        Logger logger = Logger.getLogger("returnAuthorId");
+        boolean need_AND = false;
+        List<Integer> bookIds = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT bd.id, bd.title FROM book_details bd";
+
+            // Check If genre Exist
+            if (!genre.isEmpty()) {
+                for (String g : genre) {
+                    System.out.println(g);
+                    sql += String.format(" WHERE bd.title IN (SELECT title FROM book_genre WHERE genre = '%s')", g);
+                    need_AND = true;
+                }
+            }
+
+            if (!ShowOwned){ // Exclude All Bought Book
+                System.out.println("Exclude the Book Bought");
+                if (!need_AND) {
+                    sql += String.format(" WHERE bd.id NOT IN (SELECT book_id FROM book_owned WHERE user_id = %d)", UserId);
+                } else{
+                    sql += String.format(" AND bd.id NOT IN (SELECT book_id FROM book_owned WHERE user_id = %d)", UserId);
+                }
+            }
+
+            System.out.println(sql);
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                 ResultSet resultSet = preparedStatement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    bookIds.add(resultSet.getInt("id"));
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Error retrieving author ID", e);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error connecting to database", e);
+        }
+
+        return bookIds;
+    }
+
 
 
 
