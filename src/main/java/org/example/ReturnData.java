@@ -793,6 +793,37 @@ public class ReturnData {
     }
 
 
+    public int[] returnTenLatestBooks() {
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        int[] topBookIds = new int[10];
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT * FROM book_details " +
+                             "ORDER BY id DESC " +
+                             "LIMIT 10");
+             ResultSet resultSet = statement.executeQuery()) {
+
+            for (int i = 0; i < 10; i++){
+                if (resultSet.next()){
+                    topBookIds[i] = resultSet.getInt("id");
+                }
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returning top 10 books", e);
+        }
+
+        return topBookIds;
+    }
+
+
+
+
+
+
+
+
 
 
 
