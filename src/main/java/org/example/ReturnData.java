@@ -843,6 +843,31 @@ public class ReturnData {
     }
 
 
+    public List<Integer> returnBookPublished(int userId) {
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        List<Integer> ownedBooks = new ArrayList<>();
+
+        String sql = "SELECT id FROM book_details WHERE author_id = (SELECT id FROM author WHERE user_id = ?)";
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                ownedBooks.add(resultSet.getInt("id"));
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returning owned books", e);
+        }
+
+        return ownedBooks;
+    }
+
+
+
 
 
 
