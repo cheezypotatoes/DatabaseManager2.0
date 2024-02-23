@@ -197,6 +197,15 @@ public class MainTesting {
         //}
 
 
+        //List<Integer> result = db.Return.returnOwnedBooks(5);
+
+        //for (int e : result){
+            //System.out.println(e);
+        //}
+
+
+
+
 
 
 

@@ -796,16 +796,16 @@ public class ReturnData {
     public int[] returnTenLatestBooks() {
         Logger logger = Logger.getLogger("InsertDataLogger");
         int[] topBookIds = new int[10];
+        String sql = "SELECT * FROM book_details " +
+                "ORDER BY id DESC " +
+                "LIMIT 10";
 
         try (Connection connection = DriverManager.getConnection(this.dataLocation);
-             PreparedStatement statement = connection.prepareStatement(
-                     "SELECT * FROM book_details " +
-                             "ORDER BY id DESC " +
-                             "LIMIT 10");
+             PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
-            for (int i = 0; i < 10; i++){
-                if (resultSet.next()){
+            for (int i = 0; i < 10; i++) {
+                if (resultSet.next()) {
                     topBookIds[i] = resultSet.getInt("id");
                 }
             }
@@ -816,6 +816,34 @@ public class ReturnData {
 
         return topBookIds;
     }
+
+
+
+    public List<Integer> returnOwnedBooks(int userId) {
+        Logger logger = Logger.getLogger("InsertDataLogger");
+        List<Integer> ownedBooks = new ArrayList<>();
+
+        String sql = "SELECT book_id FROM book_owned WHERE user_id = ?";
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                ownedBooks.add(resultSet.getInt("book_id"));
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returning owned books", e);
+        }
+
+        return ownedBooks;
+    }
+
+
+
 
 
 
