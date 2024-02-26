@@ -755,12 +755,18 @@ public class ReturnData {
         List<Integer> bookIds = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
             String sql = "SELECT bd.id, bd.title FROM book_details bd";
+            boolean first = true;
 
             // Check If genre Exist
             if (!genre.isEmpty()) {
                 for (String g : genre) {
-                    System.out.println(g);
-                    sql += String.format(" WHERE bd.title IN (SELECT title FROM book_genre WHERE genre = '%s')", g);
+                    if (first) {
+                        sql += String.format(" WHERE bd.title IN (SELECT title FROM book_genre WHERE genre = '%s')", g);
+                        first = false;
+                    }
+                    else{
+                        sql += String.format(" AND bd.title IN (SELECT title FROM book_genre WHERE genre = '%s')", g);
+                    }
                     need_AND = true;
                 }
             }
@@ -773,8 +779,6 @@ public class ReturnData {
                     sql += String.format(" AND bd.id NOT IN (SELECT book_id FROM book_owned WHERE user_id = %d)", UserId);
                 }
             }
-
-            System.out.println(sql);
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql);
                  ResultSet resultSet = preparedStatement.executeQuery()) {

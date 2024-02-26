@@ -178,16 +178,16 @@ public class MainTesting {
             //System.out.println(String.valueOf(e));
         //}
 
-        //List<String> gen= new ArrayList<>();
-        //gen.add("Classic");
-        //gen.add("horror");
+        List<String> gen= new ArrayList<>();
+        gen.add("Classic");
+        gen.add("Fiction");
         // user 5 bought num 2
 
-        //List<Integer> result =db.Return.returnSearch("Book Name", gen, "", true, 5);
+        List<Integer> result =db.Return.returnSearch("Book Name", gen, "", true, 5);
 
-        //for (int g : result){
-            //System.out.println(g);
-        //}
+        for (int g : result){
+            System.out.println(g);
+        }
         
         
         //int[] topten = db.Return.returnTenLatestBooks();
