@@ -870,6 +870,69 @@ public class ReturnData {
         return ownedBooks;
     }
 
+    public String returnUserEmail(int userId){
+        Logger logger = Logger.getLogger("InsertDataLogger");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT email FROM users WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getString("email");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning cash", e);
+        }
+        return "";
+    }
+
+    public String returnUserUserName(int userId){
+        Logger logger = Logger.getLogger("InsertDataLogger");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT username FROM users WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getString("username");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error Returning cash", e);
+        }
+        return "";
+    }
+
+    public List<String> returnAllGenreById(int book_id){
+        Logger logger = Logger.getLogger("returnAllGenreById");
+        List<String> ownedBooks = new ArrayList<>();
+
+        String sql = "SELECT genre " +
+                "FROM book_genre " +
+                "WHERE title = (SELECT title FROM book_details WHERE id = ?)";
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, book_id);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                ownedBooks.add(resultSet.getString("genre"));
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returning genre", e);
+        }
+
+        return ownedBooks;
+    }
+
 
 
 
