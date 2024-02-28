@@ -910,7 +910,7 @@ public class ReturnData {
 
     public List<String> returnAllGenreById(int book_id){
         Logger logger = Logger.getLogger("returnAllGenreById");
-        List<String> ownedBooks = new ArrayList<>();
+        List<String> bookGenres = new ArrayList<>();
 
         String sql = "SELECT genre " +
                 "FROM book_genre " +
@@ -923,40 +923,48 @@ public class ReturnData {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                ownedBooks.add(resultSet.getString("genre"));
+                bookGenres.add(resultSet.getString("genre"));
             }
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error returning genre", e);
         }
 
-        return ownedBooks;
+        return bookGenres;
+    }
+
+    public List<String[]> returnAllBookReviewsById(int bookId) {
+        Logger logger = Logger.getLogger("returnAllBookReviewsById");
+        List<String[]> bookReviews = new ArrayList<>();
+
+        String sql = "SELECT user_id, review, rating, is_owned " +
+                "FROM book_reviews " +
+                "WHERE book_id = ?";
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, bookId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String[] review = new String[4];
+                review[0] = resultSet.getString("user_id");
+                review[1] = resultSet.getString("review");
+                review[2] = String.valueOf(resultSet.getInt("rating"));
+                review[3] = resultSet.getBoolean("is_owned") ? "Owned" : "Not Owned";
+                bookReviews.add(review);
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returning book reviews", e);
+        }
+
+        return bookReviews;
     }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //TODO ReturnUserDetailsById JUST MAKE IT LOL
-    //TODO RETURN ALL BOOK BOUGHT BY USER, MAKE BUY BOOK FIRST
-    //TODO RETURN USER SPECIFIC DETAILS, MAKE BUY BOOK FIRST TO RETURN BOOK BOUGHT
-    //TODO study logger
 
 
 }

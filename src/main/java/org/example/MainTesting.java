@@ -209,10 +209,22 @@ public class MainTesting {
             //System.out.println(e);
         //}
 
-        List<String> result = db.Return.returnAllGenreById(5);
+        //List<String> result = db.Return.returnAllGenreById(5);
 
-        for (String g : result){
-            System.out.println(g);
+        //for (String g : result){
+           // System.out.println(g);
+        //}
+
+        db.Insert.InsertBookReview(1, 1, 4, "Great book, highly recommended!");
+        //db.Insert.InsertBookReview(2, 1, 5, "Excellent read, couldn't put it down!");
+        //db.Insert.InsertBookReview(3, 2, 3, "Interesting plot, but pacing was a bit slow.");
+        //db.Insert.InsertBookReview(4, 3, 5, "Amazing story, loved every bit of it!");
+        //db.Insert.InsertBookReview(5, 4, 4, "Well-written and engaging.");
+
+
+        List<String[]> bookReviews = db.Return.returnAllBookReviewsById(1);
+        for (String[] review : bookReviews) {
+            System.out.println("User ID: " + review[0] + ", Review: " + review[1] + ", Rating: " + review[2] + ", Is Owned:" + review[3]);
         }
 
 

@@ -238,7 +238,6 @@ public class InsertData{
                 preparedStatement.setString(4, reviewText);
                 preparedStatement.setBoolean(5, this.check.CheckIfBookWasBought(bookId, userId));
 
-                // Execute the SQL statement to insert data
                 preparedStatement.executeUpdate();
 
                 System.out.println("Data inserted into book_reviews table successfully");
