@@ -1,9 +1,6 @@
 package org.example;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressWarnings("ALL")
 public class MainTesting {
 
@@ -215,17 +212,37 @@ public class MainTesting {
            // System.out.println(g);
         //}
 
-        db.Insert.InsertBookReview(1, 1, 4, "Great book, highly recommended!");
+        //db.Insert.InsertBookReview(1, 1, 4, "Great book, highly recommended!");
         //db.Insert.InsertBookReview(2, 1, 5, "Excellent read, couldn't put it down!");
         //db.Insert.InsertBookReview(3, 2, 3, "Interesting plot, but pacing was a bit slow.");
         //db.Insert.InsertBookReview(4, 3, 5, "Amazing story, loved every bit of it!");
         //db.Insert.InsertBookReview(5, 4, 4, "Well-written and engaging.");
 
 
-        List<String[]> bookReviews = db.Return.returnAllBookReviewsById(1);
-        for (String[] review : bookReviews) {
-            System.out.println("User ID: " + review[0] + ", Review: " + review[1] + ", Rating: " + review[2] + ", Is Owned:" + review[3]);
-        }
+        //List<String[]> bookReviews = db.Return.returnAllBookReviewsById(1);
+        //for (String[] review : bookReviews) {
+            //System.out.println("User ID: " + review[0] + ", Review: " + review[1] + ", Rating: " + review[2] + ", Is Owned:" + review[3]);
+        //}
+
+
+        //db.Insert.insertOrUpdateBookReview(1, 23, 4, "yeah");
+
+
+        //System.out.println(db.Check.checkIfExist(1, 23));
+
+        //db.Insert.insertOrUpdateBookReview(2, 50, 5, "NEW REVIEW UPDATED", true);
+
+        //db.Update.updateReview(2, 50, 5, "NEW REVIEW", true);
+
+        //db.Insert.createEmptyReviewRow(1,1);
+
+        //db.Insert.InsertBookRating(1, 1, 3);
+
+        //Sdb.Insert.InsertBookReviewText(12, 1, "Good bookeee");
+
+        //System.out.println(db.Check.checkIfReviewTextExist(1,1));
+
+
 
 
 
