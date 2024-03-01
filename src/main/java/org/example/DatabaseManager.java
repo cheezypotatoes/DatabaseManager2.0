@@ -37,7 +37,7 @@ public class DatabaseManager {
         this.Check = new CheckData(this.dataLocation);
         this.Return = new ReturnData(this.dataLocation, this.Check);
         this.Insert = new InsertData(this.dataLocation, this.Check, this.Return);
-        this.Update = new UpdateData(this.dataLocation, this.Return, this.Insert);
+        this.Update = new UpdateData(this.dataLocation, this.Return, this.Insert, this.Check);
         this.Insert.InsertDataAfter(this.Update);
         this.Login = new LoginData(this.dataLocation);
     }

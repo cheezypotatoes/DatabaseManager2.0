@@ -188,6 +188,26 @@ public class CheckData {
         return false;
     }
 
+    public boolean checkIfOwnedExist(int bookId, int userId){
+        Logger logger = Logger.getLogger("checkIfOwnedExist");
+        String query = "SELECT COUNT(*) FROM book_owned WHERE book_id = ? AND user_id = ?";
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, bookId);
+            preparedStatement.setInt(2, userId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "checkIfOwnedExist error", e);
+        }
+        return false;
+    }
+
 
 
 }

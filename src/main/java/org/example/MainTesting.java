@@ -1,6 +1,8 @@
 package org.example;
 
 
+import java.util.List;
+
 @SuppressWarnings("ALL")
 public class MainTesting {
 
@@ -10,7 +12,7 @@ public class MainTesting {
         DatabaseManager db = new DatabaseManager("jdbc:sqlite:test.db");
         db.createTablesIfNotExist();
 
-        //db.Insert.InsertNewUser("example32@example.com", "example_user", "password123", false, 150.0);
+        //db.Insert.InsertNewUser("example32@example3.com", "example_user", "password123", false, 150.0);
 
         //db.Insert.InsertNewDescription("The Great Gatsby", "Pretty Much Good");
 
@@ -87,7 +89,7 @@ public class MainTesting {
 
         //System.out.println(db.Return.returnBookPrice(2));
 
-        //db.Update.buyBook(1, 1);
+        //db.Update.buyBook(1, 2);
         //db.Update.buyBook(5, 2);
         //db.Update.buyBook(5, 3);
         //db.Update.buyBook(5, 4);
@@ -236,7 +238,8 @@ public class MainTesting {
 
         //db.Insert.createEmptyReviewRow(1,1);
 
-        //db.Insert.InsertBookRating(1, 1, 3);
+        //db.Insert.InsertBookRating(2, 1, 5);
+        //db.Update.buyBook(1, 2);
 
         //db.Insert.InsertBookReviewText(1, 1, "Good book");
 
@@ -246,11 +249,32 @@ public class MainTesting {
 
         //System.out.println(db.Return.returnReviewText(1,1));
 
-        String[] details = db.Return.returnBookReviewDetails(1,1);
+        //String[] details = db.Return.returnBookReviewDetails(1,1);
 
-        System.out.println("Rating " + details[0]);
-        System.out.println("Review " + details[1]);
-        System.out.println("Owned " + details[2]);
+        //System.out.println("Rating " + details[0]);
+        //System.out.println("Review " + details[1]);
+        //System.out.println("Owned " + details[2]);
+
+        //db.Insert.InsertNewUser("example32@example3.com", "example_user", "password123", false, 150.0);
+        //db.Insert.InsertBookRating(7, 1, 3);
+        //db.Update.buyBook(1, 3);
+
+        List<String[]> ownedBookRatings = db.Return.returnBookOwnedOrNot(1, false);
+
+        for (String[] rating : ownedBookRatings) {
+            System.out.println("Rating: " + rating[0]);
+            System.out.println("Book Id: " + rating[1]);
+            System.out.println("\n");
+        }
+
+
+        //System.out.println(db.Check.checkIfOwnedExist(1, 1));
+
+        //db.Insert.InsertNotOwnedBooks(1, 1);
+
+        //db.Update.updateOwnedBook(2, 1);
+
+
 
 
 

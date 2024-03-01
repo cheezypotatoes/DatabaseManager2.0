@@ -1016,6 +1016,56 @@ public class ReturnData {
         return details;
     }
 
+    //TODO: Make book owned row also in buy book make it true if its false
+    public List<String[]> returnBookOwnedOrNot(int userId, boolean owned) {
+        Logger logger = Logger.getLogger("returnOwnedBookRating");
+        List<String[]> bookReviews = new ArrayList<>();
+        String sql;
+
+        if (owned) {
+            sql = "SELECT rating, book_id " +
+                    "FROM book_rating " +
+                    "WHERE book_id IN ( " +
+                    "SELECT book_id " +
+                    "FROM book_owned " +
+                    "WHERE is_owned = 1 " +
+                    "AND user_id = ? " +
+                    ")";
+        } else {
+            sql = "SELECT rating, book_id " +
+                    "FROM book_rating " +
+                    "WHERE book_id IN ( " +
+                    "SELECT book_id " +
+                    "FROM book_owned " +
+                    "WHERE is_owned = 0 " +
+                    "AND user_id = ? " +
+                    ")";
+        }
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String[] review = new String[2];
+
+                review[0] = String.valueOf(resultSet.getInt("rating"));
+                review[1] = String.valueOf(resultSet.getInt("book_id"));
+                bookReviews.add(review);
+            }
+
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returnOwnedBookRating", e);
+        }
+
+        return bookReviews;
+    }
+
+
+
+
 
 
 
