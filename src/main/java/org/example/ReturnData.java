@@ -9,14 +9,18 @@ import java.util.logging.Logger;
 public class ReturnData {
 
     public String dataLocation;
+    public CheckData Check;
+
 
     /**
      * Constructs a ReturnData object with the specified data location.
      *
      * @param dataLocation The location where the data is stored.
      */
-    public ReturnData(String dataLocation) {
+    public ReturnData(String dataLocation, CheckData Check) {
+
         this.dataLocation = dataLocation;
+        this.Check = Check;
     }
 
     /**
@@ -961,6 +965,55 @@ public class ReturnData {
         }
 
         return bookReviews;
+    }
+
+    public int returnReviewRating(int userId, int bookId){
+        Logger logger = Logger.getLogger("returnReviewRating");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT rating FROM book_rating WHERE user_id = ? and book_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+                preparedStatement.setInt(2, bookId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getInt("rating");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returnReviewRating", e);
+        }
+        return -1;
+    }
+
+    public String returnReviewText(int userId, int bookId){
+        Logger logger = Logger.getLogger("returnReviewRating");
+
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT review FROM book_text_review WHERE user_id = ? and book_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+                preparedStatement.setInt(2, bookId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getString("review");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returnReviewRating", e);
+        }
+        return null;
+    }
+
+    public String[] returnBookReviewDetails(int userId, int bookId){
+        String[] details = new String[3];
+        details[0] = String.valueOf(returnReviewRating(userId, bookId));
+        details[1] = returnReviewText(userId, bookId);
+        details[2] = String.valueOf(Check.CheckIfBookWasBought(bookId, userId));
+
+        return details;
     }
 
 

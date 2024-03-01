@@ -238,9 +238,20 @@ public class MainTesting {
 
         //db.Insert.InsertBookRating(1, 1, 3);
 
-        //Sdb.Insert.InsertBookReviewText(12, 1, "Good bookeee");
+        //db.Insert.InsertBookReviewText(1, 1, "Good book");
 
         //System.out.println(db.Check.checkIfReviewTextExist(1,1));
+
+        //System.out.println(db.Return.returnReviewRating(1,1));
+
+        //System.out.println(db.Return.returnReviewText(1,1));
+
+        String[] details = db.Return.returnBookReviewDetails(1,1);
+
+        System.out.println("Rating " + details[0]);
+        System.out.println("Review " + details[1]);
+        System.out.println("Owned " + details[2]);
+
 
 
 
