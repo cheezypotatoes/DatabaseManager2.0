@@ -1016,7 +1016,6 @@ public class ReturnData {
         return details;
     }
 
-    //TODO: Make book owned row also in buy book make it true if its false
     public List<String[]> returnBookOwnedOrNot(int userId, boolean owned) {
         Logger logger = Logger.getLogger("returnOwnedBookRating");
         List<String[]> bookReviews = new ArrayList<>();
