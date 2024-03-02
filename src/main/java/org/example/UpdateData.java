@@ -112,13 +112,11 @@ public class UpdateData {
             System.out.println("Successfully bought");
             // Updates users cash
             UpdateUserCash(user_id, usersCash - bookPrice);
-            // Record book (Make a new row for book bought)
-            // If book is not found then make a new row for it as owned
-            // If not then it already exist just make it true
-            if (!Check.CheckIfBookWasBought(book_id, user_id)) {
+            // If book was not bought and book is not owned then add the book row
+            if (!Check.CheckIfBookWasBought(book_id, user_id) && !Check.checkIfOwnedExist(book_id,user_id)) {
                 Insert.AddBoughtBook(book_id, user_id);
-            }
-            else{
+            } // Else if book was not bought and already owned then update
+            else if(!Check.CheckIfBookWasBought(book_id,user_id) && Check.checkIfOwnedExist(book_id,user_id)){
                 updateOwnedBook(book_id, user_id);
             }
             // Add one to book sold

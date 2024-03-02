@@ -363,7 +363,7 @@ public class InsertData{
             return;
         }
 
-        if (!check.CheckIfBookWasBought(bookId, userId)){
+        if (!check.CheckIfBookWasBought(bookId, userId) && !check.checkIfOwnedExist(bookId,userId)){
             System.out.println("BOOK OWNED ROW DOESNT EXIST");
             InsertNotOwnedBooks(bookId, userId);
         }
@@ -404,25 +404,30 @@ public class InsertData{
 
 
 
-
-
     public void InsertBookReviewText(int bookId, int userId, String review){
 
+        // Check if a review for the given book and user already exists
         if (check.checkIfReviewTextExist(bookId, userId)){
             System.out.println("Review Row Already Exist Therefore Updating it");
-            Update.updateReviewText(bookId, userId, review);
+            Update.updateReviewText(bookId, userId, review); // Update the existing review
             return;
         }
 
-        if (!check.CheckIfBookWasBought(bookId, userId)){
+        // Check if the book is not bought and not already owned
+        if (!check.CheckIfBookWasBought(bookId, userId) && !check.checkIfOwnedExist(bookId, userId)){
             System.out.println("Book Not Bought AND NO ROW ADDING NEW ROW");
-            AddBoughtBook(bookId, userId);
+            InsertNotOwnedBooks(bookId, userId); // Add the book as not owned
+        }
+        // Check if the book is bought but not already owned
+        else if (check.CheckIfBookWasBought(bookId, userId) && !check.checkIfOwnedExist(bookId, userId)){
+            AddBoughtBook(bookId, userId); // Add the bought book
         }
 
         Logger logger = Logger.getLogger("InsertBookReview");
         try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
             String insertBookReviewSQL = "INSERT INTO book_text_review (book_id, user_id, review) VALUES (?, ?, ?);";
 
+            // Insert the review into the database
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertBookReviewSQL)) {
                 preparedStatement.setInt(1, bookId);
                 preparedStatement.setInt(2, userId);
@@ -435,6 +440,7 @@ public class InsertData{
         }
 
     }
+
 
 
 
