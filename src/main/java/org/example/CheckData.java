@@ -213,6 +213,24 @@ public class CheckData {
         return false;
     }
 
+    public boolean checkIfAdmin(int userId){
+        Logger logger = Logger.getLogger("checkIfAdmin");
+        String query = "SELECT is_admin FROM users WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(this.dataLocation);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, userId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBoolean("is_admin");
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "checkIfAdmin error", e);
+        }
+        return false;
+    }
+
 
 
 }

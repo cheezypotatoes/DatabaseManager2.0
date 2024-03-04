@@ -1062,6 +1062,78 @@ public class ReturnData {
         return bookReviews;
     }
 
+    public  List<int[]> returnBookReviewRatings(int bookId){
+        Logger logger = Logger.getLogger("returnReviewRating");
+        List<int[]> bookRatings = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT user_id,rating FROM book_rating WHERE book_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, bookId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int[] idAndRating = new int[2];
+                        idAndRating[0] = resultSet.getInt("user_id");
+                        idAndRating[1] = resultSet.getInt("rating");
+                        bookRatings.add(idAndRating);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error returnReviewRating", e);
+        }
+        return bookRatings;
+    }
+
+    public List<String[]> returnAllUnpublishedBooks() {
+        Logger logger = Logger.getLogger("returnAllUnpublishedBooks");
+        List<String[]> unpublishedBooks = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT id, title, price FROM book_details WHERE is_available = 0";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String[] bookDetails = new String[3];
+                        bookDetails[0] = String.valueOf(resultSet.getInt("id"));
+                        bookDetails[1] = resultSet.getString("title");
+                        bookDetails[2] = String.valueOf(resultSet.getInt("price"));
+                        unpublishedBooks.add(bookDetails);
+
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error retrieving unpublished books", e);
+        }
+        return unpublishedBooks;
+    }
+
+    public List<String[]> returnAllPublishedBooks() {
+        Logger logger = Logger.getLogger("returnAllUnpublishedBooks");
+        List<String[]> unpublishedBooks = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String sql = "SELECT id, title, price FROM book_details WHERE is_available = 1";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String[] bookDetails = new String[3];
+                        bookDetails[0] = String.valueOf(resultSet.getInt("id"));
+                        bookDetails[1] = resultSet.getString("title");
+                        bookDetails[2] = String.valueOf(resultSet.getInt("price"));
+                        unpublishedBooks.add(bookDetails);
+
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error retrieving unpublished books", e);
+        }
+        return unpublishedBooks;
+    }
+
+
+
+
+
 
 
 

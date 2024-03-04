@@ -199,24 +199,56 @@ public class UpdateData {
     public void updateOwnedBook(int bookId, int userId) {
         Logger logger = Logger.getLogger("updateReviewText");
         try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
-            // SQL statement to update data in the "book_reviews" table
             String update = "UPDATE book_owned " +
                     "SET is_owned = ?" +
                     "WHERE book_id = ? AND user_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(update)) {
-                // Set the parameters for the prepared statement
                 preparedStatement.setBoolean(1, true);
                 preparedStatement.setInt(2, bookId);
                 preparedStatement.setInt(3, userId);
 
-                // Execute the SQL statement to update data
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error updateReviewText", e);
         }
     }
+
+    public void updateBookToAvailable(int bookId){
+        Logger logger = Logger.getLogger("updateBookToAvailable");
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String update = "UPDATE book_details " +
+                    "SET is_available = true " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(update)) {
+                preparedStatement.setInt(1, bookId);
+
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updateBookToAvailable", e);
+        }
+    }
+
+    public void updateBookToUnavailable(int bookId){
+        Logger logger = Logger.getLogger("updateBookToAvailable");
+        try (Connection connection = DriverManager.getConnection(this.dataLocation)) {
+            String update = "UPDATE book_details " +
+                    "SET is_available = false " +
+                    "WHERE id = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(update)) {
+                preparedStatement.setInt(1, bookId);
+
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updateBookToAvailable", e);
+        }
+    }
+
 
 
 

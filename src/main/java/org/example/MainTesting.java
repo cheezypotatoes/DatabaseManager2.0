@@ -259,13 +259,16 @@ public class MainTesting {
         //db.Insert.InsertBookRating(7, 1, 3);
         //db.Update.buyBook(1, 3);
 
-        List<String[]> ownedBookRatings = db.Return.returnBookOwnedOrNot(1, false);
+        //List<String[]> ownedBookRatings = db.Return.returnBookOwnedOrNot(1, false);
 
-        for (String[] rating : ownedBookRatings) {
-            System.out.println("Rating: " + rating[0]);
-            System.out.println("Book Id: " + rating[1]);
-            System.out.println("\n");
-        }
+        //for (String[] rating : ownedBookRatings) {
+            //System.out.println("Rating: " + rating[0]);
+            //System.out.println("Book Id: " + rating[1]);
+            //System.out.println("\n");
+        //}
+
+        //db.Insert.InsertNewUser("admin@example3.com", "admin", "password123", true, 1000000.0);
+        //System.out.println(db.Check.checkIfAdmin(5));
 
 
         //System.out.println(db.Check.checkIfOwnedExist(1, 1));
@@ -273,6 +276,15 @@ public class MainTesting {
         //db.Insert.InsertNotOwnedBooks(1, 1);
 
         //db.Update.updateOwnedBook(2, 1);
+
+
+        List<String[]> data = db.Return.returnAllUnpublishedBooks();
+
+        for (String[] d : data){
+            for (int i = 0; i < d.length; i++){
+                System.out.println(d[i]);
+            }
+        }
 
 
 
