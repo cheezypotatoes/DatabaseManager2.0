@@ -24,6 +24,9 @@ public class AdminPanelCls {
                     adminBookInsert(db, input);
                     //exit = true;
                     break;
+                case 4:
+                    exit = true;
+                    break;
             }
         } while (!exit);
 
@@ -179,6 +182,7 @@ public class AdminPanelCls {
             System.out.println("1. Show All Unavailable Books");
             System.out.println("2. Show All Available Books");
             System.out.println("3. Admin Book Insert");
+            System.out.println("4. Exit");
 
 
             System.out.print("Choose an option: ");
@@ -186,7 +190,7 @@ public class AdminPanelCls {
             int option;
             try {
                 option = Integer.parseInt(input.nextLine());
-                if (option > 3 || option <= 0)
+                if (option > 4 || option <= 0)
                 {
                     System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                     System.out.println("Invalid option. Please enter a available option.");
